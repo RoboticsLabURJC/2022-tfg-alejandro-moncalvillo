@@ -68,7 +68,7 @@ footer:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/Amglega"
-    - label: "GitHub"
+    - label: "JdeRobot"
       icon: "./logo.png"
       url: "https://jderobot.github.io"
 
