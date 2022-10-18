@@ -68,6 +68,9 @@ footer:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/Amglega"
+    - label: "RoboticsLab"
+      icon: "fab fa-fw fa-github"
+      url: "https://roboticslaburjc.github.io/"
 
 defaults:
   # _posts
