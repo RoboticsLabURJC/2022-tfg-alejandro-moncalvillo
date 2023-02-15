@@ -2,6 +2,7 @@ import numpy as np
 import cv2 as cv
 import onnx
 import onnxruntime as ort
+import time
 
 
 print(ort.get_device())
@@ -19,10 +20,15 @@ input_size = (28,28)
 
 
 cap = cv.VideoCapture(0)
+# Init auxiliar variables used for stabilized predictions
+previous_pred = 0
+previous_established_pred = "-"
+count_same_digit = 0
 if not cap.isOpened():
     print("Cannot open camera")
     exit()
 while True:
+    start = time.time()
     # Capture frame-by-frame
     ret, frame = cap.read()
     upper_point = (frame.shape[1]//2 + 100, frame.shape[0]//2 + 100)
@@ -46,14 +52,34 @@ while True:
     key = cv.waitKey(1)
     if key == ord('q'):
         break
-    if key == ord('i'):
-        input_tensor = roi_resized.reshape((1, 1, input_size[0], input_size[1])).astype(np.float32)
 
-        # Inference
-        ort_inputs = {ort_session.get_inputs()[0].name: input_tensor}
-        output = ort_session.run(None, ort_inputs)[0]
-        pred = int(np.argmax(output, axis=1))
-        print("Digit found: {}".format(pred))
+    input_tensor = roi_resized.reshape((1, 1, input_size[0], input_size[1])).astype(np.float32)
+
+    # Inference
+    ort_inputs = {ort_session.get_inputs()[0].name: input_tensor}
+    output = ort_session.run(None, ort_inputs)[0]
+    pred = int(np.argmax(output, axis=1))
+
+
+    end = time.time()
+    frame_time = round(end-start, 3)
+    fps = 1.0/frame_time
+    # number of consecutive frames that must be reached to consider a validprediction
+    n_consecutive_frames = int(fps/2)
+
+    # For stability, only show digit if detected in more than n consecutive frames
+    if pred != previous_established_pred:
+        if count_same_digit < n_consecutive_frames:
+            if previous_pred == pred:
+                count_same_digit += 1
+            else:
+                count_same_digit = 0
+            previous_established_pred = "-"  # no prediction
+        else:
+            print("Digit found: {}".format(pred))
+            previous_established_pred = pred
+            count_same_digit = 0
+        previous_pred = pred
 
 
 # When everything done, release the capture
