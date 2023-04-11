@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <sdf version="1.5">
 
-  <model name="f1ros2">
+  <model name="taxi_holo_ros2">
     <pose>0 0 0.0 0 0 0</pose>
 
     <link name='base_link' />
@@ -25,7 +25,7 @@
       <sensor name="head_hokuyo_sensor" type="ray">
         <always_on>true</always_on>
         <visualize>true</visualize>
-        <pose relative_to='base_link'>0 2.34 0.72 0 0 1.5708</pose>
+        <pose relative_to='base_link'>0 2.45 0.5 0 0 1.5708</pose>
         <update_rate>40</update_rate>
         <ray>
           <scan>
@@ -75,7 +75,7 @@
         <geometry>
           <mesh>
             <scale>0.001 0.001 0.001</scale>
-            <uri>model://f1ros2/meshes/chassis_link.stl</uri>
+            <uri>model://taxi_holo_ros2/meshes/chassis_link.stl</uri>
           </mesh>
         </geometry>
         <surface>
@@ -91,11 +91,11 @@
         </surface>
       </collision>
       <visual name="visual">
-        <pose>0 1.6 0.0 0 -0 1.57</pose>
+        <pose>0 0.4 0.0 0 -0 1.57</pose>
         <geometry>
           <mesh>
-            <scale>5 5 5</scale>
-            <uri>model://f1ros2/meshes/F1.dae</uri>
+            <scale>1 1 1</scale>
+            <uri>model://taxi_holo_ros2/meshes/taxi_holo.dae</uri>
         </mesh>
       </geometry>
       </visual>
@@ -156,7 +156,7 @@
         <geometry>
           <mesh>
             <scale>0.001 0.001 0.001</scale>
-            <uri>model://f1ros2/meshes/bl_1.stl</uri>
+            <uri>model://taxi_holo_ros2/meshes/bl_1.stl</uri>
           </mesh>
         </geometry>
       </visual>-->
@@ -209,12 +209,12 @@
           </friction>
         </surface>
       </collision>
-      <!--<visual name='br_1_visual'>
+      <!-- <visual name='br_1_visual'>
         <pose>-0.875 1.0136 0.1444 0 -0 0</pose>
         <geometry>
           <mesh>
             <scale>0.001 0.001 0.001</scale>
-            <uri>model://f1ros2/meshes/br_1.stl</uri>
+            <uri>model://taxi_holo_ros2/meshes/br_1.stl</uri>
           </mesh>
         </geometry>
       </visual>-->
@@ -286,7 +286,7 @@
         <geometry>
           <mesh>
             <scale>0.001 0.001 0.001</scale>
-            <uri>model://f1ros2/meshes/fl_1.stl</uri>
+            <uri>model://taxi_holo_ros2/meshes/fl_1.stl</uri>
           </mesh>
         </geometry>
         <surface>
@@ -301,12 +301,12 @@
           </friction>
         </surface>
       </collision>
-      <!--<visual name='fl_1_visual'>
+      <!-- <visual name='fl_1_visual'>
         <pose>0.875 -1.5174 0.1444 0 -0 0</pose>
         <geometry>
           <mesh>
             <scale>0.001 0.001 0.001</scale>
-            <uri>model://f1ros2/meshes/fl_1.stl</uri>
+            <uri>model://taxi_holo_ros2/meshes/fl_1.stl</uri>
           </mesh>
         </geometry>
       </visual>-->
@@ -378,7 +378,7 @@
         <geometry>
           <mesh>
             <scale>0.001 0.001 0.001</scale>
-            <uri>model://f1ros2/meshes/fr_1.stl</uri>
+            <uri>model://taxi_holo_ros2/meshes/fr_1.stl</uri>
           </mesh>
         </geometry>
         <surface>
@@ -398,7 +398,7 @@
         <geometry>
           <mesh>
             <scale>0.001 0.001 0.001</scale>
-            <uri>model://f1ros2/meshes/fr_1.stl</uri>
+            <uri>model://taxi_holo_ros2/meshes/fr_1.stl</uri>
           </mesh>
         </geometry>
       </visual>-->
@@ -434,7 +434,7 @@
     <plugin name='ackermann_drive' filename='libgazebo_ros_ackermann_drive.so'>
 
       <ros>
-        <namespace>f1ros2</namespace>
+        <namespace>taxi_holo_ros2</namespace>
         <remapping>cmd_vel:=cmd_vel</remapping>
         <remapping>odom:=odom</remapping>
         <remapping>distance:=distance</remapping>
