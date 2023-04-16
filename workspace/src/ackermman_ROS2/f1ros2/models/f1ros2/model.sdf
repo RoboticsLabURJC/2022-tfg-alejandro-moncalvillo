@@ -71,11 +71,11 @@
         </inertia>
       </inertial>
       <collision name='chassis_link_fixed_joint_lump__chassis_link_collision'>
-        <pose>0 0 0.46936 0 -0 0</pose>
+        <pose>0 1.6 0.0 0 -0 1.57</pose>
         <geometry>
           <mesh>
-            <scale>0.001 0.001 0.001</scale>
-            <uri>model://f1ros2/meshes/chassis_link.stl</uri>
+            <scale>5 5 5</scale>
+            <uri>model://f1ros2/meshes/F1.dae</uri>
           </mesh>
         </geometry>
         <surface>
@@ -103,9 +103,10 @@
       <!--  <gravity>1</gravity> -->
       <!--  <gravity>1</gravity> -->
       <!-- <velocity_decay/> -->
-      <self_collide>1</self_collide>
+      <self_collide>0</self_collide>
       <!--  <gravity>1</gravity> -->
     </link>
+    
     <joint name='bl_axle' type='revolute'>
       <pose relative_to='chassis_link'>-0.875 -1.01364 0.324997 0 -0 0</pose>
       <parent>chassis_link</parent>
@@ -117,6 +118,7 @@
         </dynamics>
       </axis>
     </joint>
+
     <link name='bl_1'>
       <pose relative_to='bl_axle'>0 0 0 0 -0 0</pose>
       <inertial>
@@ -162,8 +164,9 @@
       </visual>-->
       <!--  <gravity>1</gravity> -->
       <!-- <velocity_decay/> -->
-      <self_collide>1</self_collide>
+      <self_collide>0</self_collide>
     </link>
+    
     <joint name='br_axle' type='revolute'>
       <pose relative_to='chassis_link'>0.875 -1.01364 0.324997 0 -0 0</pose>
       <parent>chassis_link</parent>
@@ -220,7 +223,7 @@
       </visual>-->
       <!--  <gravity>1</gravity> -->
       <!-- <velocity_decay/> -->
-      <self_collide>1</self_collide>
+      <self_collide>0</self_collide>
     </link>
     <joint name='l_steer' type='revolute'>
       <pose relative_to='chassis_link'>-0.825 1.51736 0.324997 0 -0 0</pose>
@@ -253,7 +256,7 @@
       </inertial>
       <!--  <gravity>1</gravity> -->
       <!-- <velocity_decay/> -->
-      <self_collide>1</self_collide>
+      <self_collide>0</self_collide>
     </link>
 
     <joint name='fl_axle' type='revolute'>
@@ -312,7 +315,7 @@
       </visual>-->
       <!--  <gravity>1</gravity> -->
       <!-- <velocity_decay/> -->
-      <self_collide>1</self_collide>
+      <self_collide>0</self_collide>
     </link>
     <joint name='r_steer' type='revolute'>
       <pose relative_to='chassis_link'>0.825 1.51736 0.324997 0 -0 0</pose>
@@ -346,7 +349,7 @@
       </inertial>
       <!--  <gravity>1</gravity> -->
       <!-- <velocity_decay/> -->
-      <self_collide>1</self_collide>
+      <self_collide>0</self_collide>
     </link>
     <joint name='fr_axle' type='revolute'>
       <pose relative_to='r_steer_1'>0.05 0 0 0 -0 0</pose>
@@ -404,7 +407,7 @@
       </visual>-->
       <!--  <gravity>1</gravity> -->
       <!-- <velocity_decay/> -->
-      <self_collide>1</self_collide>
+      <self_collide>0</self_collide>
     </link>
 
     <link name="steering_wheel" />
