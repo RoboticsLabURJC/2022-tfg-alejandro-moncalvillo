@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(f1ros2)
+project(ackermann_cars)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -52,7 +52,13 @@ install(DIRECTORY
   DESTINATION share/${PROJECT_NAME}
 )
 install(DIRECTORY
+  models/f1renault_ros2
   models/f1ros2
+  models/montmelo_line
+  models/montreal_line
+  models/nurburgring_line
+  models/simple_circuit
+  models/taxi_holo_ros2
   DESTINATION ${GAZEBO_MODEL_PATH})
 
 ament_package()

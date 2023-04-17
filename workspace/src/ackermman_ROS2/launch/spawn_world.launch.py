@@ -13,10 +13,10 @@ def generate_launch_description():
   pkg_gazebo_ros = FindPackageShare(package='gazebo_ros').find('gazebo_ros')   
    
   # Set the path to this package.
-  pkg_share = FindPackageShare(package='f1renault_ros2').find('f1renault_ros2')
+  pkg_share = FindPackageShare(package='ackermann_cars').find('ackermann_cars')
  
   # Set the path to the world file
-  world_file_name = 'montmelo_line.world'
+  world_file_name = 'cars_models.world'
   world_path = os.path.join(pkg_share, 'worlds', world_file_name)
    
   # Set the path to the SDF model files.
