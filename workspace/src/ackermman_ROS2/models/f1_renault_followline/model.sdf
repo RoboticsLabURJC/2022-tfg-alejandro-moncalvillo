@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <sdf version='1.5'>
-  <model name='f1renault_ros2'>
+  <model name='f1_renault_followline'>
     <pose>0 0 0 0 0 0</pose>
     <static>false</static>
 
@@ -30,7 +30,7 @@
           <pose relative_to='base_link'>0 0 0 0 0 1.5708 </pose>
           <geometry>
               <mesh>
-                  <uri>model://f1renault_ros2/Renault/Car.obj</uri>
+                  <uri>model://f1_renault_followline/Renault/Car.obj</uri>
                   <scale>0.2 0.2 0.2</scale>
               </mesh>
           </geometry>
@@ -51,7 +51,7 @@
           <geometry>
 
             <mesh>
-              <uri>model://f1renault_ros2/Renault/Car.obj</uri>
+              <uri>model://f1_renault_followline/Renault/Car.obj</uri>
               <scale>0.2 0.2 0.2</scale>
           </mesh>
         </geometry>
@@ -398,7 +398,7 @@
     
     <plugin name='ackermann_drive' filename='libgazebo_ros_ackermann_drive.so'>
       <ros>
-        <namespace>f1renault_ros2</namespace>
+        <namespace>f1_renault_followline</namespace>
         <remapping>cmd_vel:=cmd_vel</remapping>
         <remapping>odom:=odom</remapping>
         <remapping>distance:=distance</remapping>

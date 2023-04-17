@@ -52,12 +52,16 @@ install(DIRECTORY
   DESTINATION share/${PROJECT_NAME}
 )
 install(DIRECTORY
-  models/f1renault_ros2
+  models/autocar
+  models/f1_renault
+  models/f1_renault_camera
+  models/f1_renault_followline
   models/f1ros2
   models/montmelo_line
   models/montreal_line
   models/nurburgring_line
   models/simple_circuit
+  models/taxi_holo_autoparking
   models/taxi_holo_ros2
   DESTINATION ${GAZEBO_MODEL_PATH})
 
