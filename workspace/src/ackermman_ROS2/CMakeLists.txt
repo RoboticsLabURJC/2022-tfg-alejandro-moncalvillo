@@ -53,7 +53,7 @@ install(DIRECTORY
 )
 install(DIRECTORY
   models/autocar
-  models/f1_renault
+  models/f1_renault_ackerman
   models/f1_renault_camera
   models/f1_renault_followline
   models/f1ros2
@@ -63,6 +63,7 @@ install(DIRECTORY
   models/simple_circuit
   models/taxi_holo_autoparking
   models/taxi_holo_ros2
+  models/big_simple_circuit
   DESTINATION ${GAZEBO_MODEL_PATH})
 
 ament_package()

@@ -26,11 +26,11 @@
         </inertia>
       </inertial>
       <collision name='chassis_link_fixed_joint_lump__chassis_link_collision'>
-        <pose>0 0 0.46936 0 -0 0</pose>
+        <pose>0 1.6 0.0 0 -0 1.57</pose>
         <geometry>
           <mesh>
-            <scale>0.001 0.001 0.001</scale>
-            <uri>model://f1_renault/Renault/chasis.dae</uri>
+            <scale>5 5 5</scale>
+            <uri>model://f1_renault_ackerman/Renault/chasis.dae</uri>
           </mesh>
         </geometry>
         <surface>
@@ -50,7 +50,7 @@
         <geometry>
           <mesh>
             <scale>5 5 5</scale>
-            <uri>model://f1_renault/Renault/chasis.dae</uri>
+            <uri>model://f1_renault_ackerman/Renault/chasis.dae</uri>
         </mesh>
       </geometry>
       </visual>
@@ -58,7 +58,7 @@
       <!--  <gravity>1</gravity> -->
       <!--  <gravity>1</gravity> -->
       <!-- <velocity_decay/> -->
-      <self_collide>1</self_collide>
+      <self_collide>0</self_collide>
       <!--  <gravity>1</gravity> -->
     </link>
 
@@ -210,7 +210,7 @@
 
     <!-- BACK LEFT WHEEL -->
     <joint name='bl_axle' type='revolute'>
-      <pose relative_to='chassis_link'>-0.775 -1.47364 0.304997 0 -0 0</pose>
+      <pose relative_to='chassis_link'>-0.775 -1.45364 0.304997 0 -0 0</pose>
       <parent>chassis_link</parent>
       <child>bl_1</child>
       <axis>
@@ -260,13 +260,13 @@
         <geometry>
           <mesh>
             <scale>0.1 0.1 0.1</scale>
-            <uri>model://f1_renault/Renault/back_left.dae</uri>
+            <uri>model://f1_renault_ackerman/Renault/back_left.dae</uri>
           </mesh>
         </geometry>
       </visual>
       <!--  <gravity>1</gravity> -->
       <!-- <velocity_decay/> -->
-      <self_collide>1</self_collide>
+      <self_collide>0</self_collide>
     </link>
 
     <!-- BACK RIGHT WHEEL -->
@@ -321,13 +321,13 @@
         <geometry>
           <mesh>
             <scale>0.1 0.1 0.1</scale>
-            <uri>model://f1_renault/Renault/back_right.dae</uri>
+            <uri>model://f1_renault_ackerman/Renault/back_right.dae</uri>
           </mesh>
         </geometry>
       </visual>
       <!--  <gravity>1</gravity> -->
       <!-- <velocity_decay/> -->
-      <self_collide>1</self_collide>
+      <self_collide>0</self_collide>
     </link>
 
     <!-- FRONT LEFT WHEEL -->
@@ -363,7 +363,7 @@
       </inertial>
       <!--  <gravity>1</gravity> -->
       <!-- <velocity_decay/> -->
-      <self_collide>1</self_collide>
+      <self_collide>0</self_collide>
     </link>
 
     <joint name='fl_axle' type='revolute'>
@@ -417,13 +417,13 @@
         <geometry>
           <mesh>
             <scale>0.1 0.1 0.1</scale>
-            <uri>model://f1_renault/Renault/front_left.dae</uri>
+            <uri>model://f1_renault_ackerman/Renault/front_left.dae</uri>
           </mesh>
         </geometry>
       </visual>
       <!--  <gravity>1</gravity> -->
       <!-- <velocity_decay/> -->
-      <self_collide>1</self_collide>
+      <self_collide>0</self_collide>
     </link>
 
     <!-- FRONT RIGHT WHEEL -->
@@ -460,7 +460,7 @@
       </inertial>
       <!--  <gravity>1</gravity> -->
       <!-- <velocity_decay/> -->
-      <self_collide>1</self_collide>
+      <self_collide>0</self_collide>
     </link>
 
     <joint name='fr_axle' type='revolute'>
@@ -513,13 +513,13 @@
         <geometry>
           <mesh>
             <scale>0.1 0.1 0.1</scale>
-            <uri>model://f1_renault/Renault/front_right.dae</uri>
+            <uri>model://f1_renault_ackerman/Renault/front_right.dae</uri>
           </mesh>
         </geometry>
       </visual>
       <!--  <gravity>1</gravity> -->
       <!-- <velocity_decay/> -->
-      <self_collide>1</self_collide>
+      <self_collide>0</self_collide>
     </link>
 
     <!-- STEERING WHEEL -->
@@ -570,21 +570,21 @@
 
       <!-- Max absolute steer angle for tyre in radians-->
       <!-- Any cmd_vel angular z greater than this would be capped -->
-      <max_steer>0.85</max_steer>
+      <max_steer>0.52</max_steer>
 
       <!-- Max absolute steering angle of steering wheel -->
       <!-- Max absolute steering angle of steering wheel -->
       <max_steering_angle>7.85</max_steering_angle>
 
       <!-- Max absolute linear speed in m/s -->
-      <max_speed>20</max_speed>
+      <max_speed>50</max_speed>
 
       <!-- PID tuning -->
-      <left_steering_pid_gain>4000 0 1</left_steering_pid_gain>
+      <left_steering_pid_gain>1000 0 1.5</left_steering_pid_gain>
       <left_steering_i_range>0 0</left_steering_i_range>
-      <right_steering_pid_gain>4000 0 1</right_steering_pid_gain>
+      <right_steering_pid_gain>1000 0 1.5</right_steering_pid_gain>
       <right_steering_i_range>0 0</right_steering_i_range>
-      <linear_velocity_pid_gain>4000 0 1</linear_velocity_pid_gain>
+      <linear_velocity_pid_gain>1000 0 1.5</linear_velocity_pid_gain>
       <linear_velocity_i_range>0 0</linear_velocity_i_range>
 
       <!-- output -->

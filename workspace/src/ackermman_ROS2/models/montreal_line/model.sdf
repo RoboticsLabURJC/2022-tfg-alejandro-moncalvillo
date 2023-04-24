@@ -7,7 +7,7 @@
     <collision name="collision">
       <geometry>
         <plane>
-          <size> 700 500</size>
+          <size> 3000 3000</size>
         </plane>
       </geometry>
     </collision>
@@ -15,6 +15,7 @@
       <geometry>
         <mesh>
           <uri>model://montreal_line/meshes/montreal.dae</uri>
+          <scale>3 3 3</scale>
         </mesh>
       </geometry>
     </visual>
@@ -24,6 +25,7 @@
       <geometry>
         <mesh>
           <uri>model://montreal_line/meshes/montreal_pared.dae</uri>
+          <scale>3 3 3</scale>
         </mesh>
       </geometry>
     </collision>
@@ -31,6 +33,7 @@
       <geometry>
         <mesh>
           <uri>model://montreal_line/meshes/montreal_pared.dae</uri>
+          <scale>3 3 3</scale>
         </mesh>
       </geometry>
     </visual>

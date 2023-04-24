@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <sdf version="1.3">
-    <model name="simple_circuit">
+    <model name="big_simple_circuit">
         <static>true</static>
         <link name="mapa">
             <pose>0 0 0 0 0 0</pose>
@@ -8,7 +8,7 @@
                 <geometry>
                     <plane>
                         <normal>0 0 1</normal>
-                        <size>1000 1000</size>
+                        <size>3000 3000</size>
                     </plane>
                 </geometry>
             </collision>

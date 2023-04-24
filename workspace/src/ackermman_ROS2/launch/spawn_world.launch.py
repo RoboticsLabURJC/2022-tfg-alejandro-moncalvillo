@@ -16,7 +16,7 @@ def generate_launch_description():
   pkg_share = FindPackageShare(package='ackermann_cars').find('ackermann_cars')
  
   # Set the path to the world file
-  world_file_name = 'cars_models.world'
+  world_file_name = 'big_simple_circuit.world'
   world_path = os.path.join(pkg_share, 'worlds', world_file_name)
    
   # Set the path to the SDF model files.
