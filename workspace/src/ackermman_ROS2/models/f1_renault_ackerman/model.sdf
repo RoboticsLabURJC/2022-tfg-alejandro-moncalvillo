@@ -3,6 +3,7 @@
 
   <model name="f1_renault_ackerman">
     <pose>0 0 0.0 0 0 0</pose>
+    <static>false</static>
 
     <link name='base_link' />
 
@@ -12,6 +13,51 @@
       <child>chassis_link</child>
     </joint>
 
+    <joint name="hokuyo_joint" type="fixed">
+      <parent>base_link</parent>
+      <child>hokuyo_link</child>
+      <pose>0 0 0 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+
+    <link name="hokuyo_link">
+      <sensor name="head_hokuyo_sensor" type="ray">
+        <always_on>true</always_on>
+        <visualize>true</visualize>
+        <pose relative_to='base_link'>0 2.34 0.72 0 0 1.5708</pose>
+        <update_rate>40</update_rate>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>720</samples>
+              <resolution>1.000000</resolution>
+              <min_angle>-1.570796</min_angle>
+              <max_angle>1.570796</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.120000</min>
+            <max>30.0</max>
+            <resolution>0.010</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.01</stddev>
+          </noise>
+        </ray>
+        <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_ray_sensor.so">
+          <ros>
+            <remapping>~/out:=scan</remapping>
+          </ros>
+          <output_type>sensor_msgs/LaserScan</output_type>
+          <frame_name>hokuyo_link</frame_name>
+        </plugin>
+      </sensor>
+    </link>
+    
     <link name='chassis_link'>
       <inertial>
         <pose>1e-06 0.07307 0.65096 0 -0 0</pose>
@@ -26,12 +72,12 @@
         </inertia>
       </inertial>
       <collision name='chassis_link_fixed_joint_lump__chassis_link_collision'>
-        <pose>0 1.51 0 0 -0 1.5708</pose>
+        <pose>0 1.6 0.0 0 -0 1.57</pose>
         <geometry>
           <mesh>
             <scale>5 5 5</scale>
             <uri>model://f1_renault_ackerman/Renault/chasis.dae</uri>
-          </mesh>
+        </mesh>
         </geometry>
         <surface>
           <contact>
@@ -45,14 +91,14 @@
           </friction>
         </surface>
       </collision>
-      <visual name='chassis_link_fixed_joint_lump__chassis_link_visual'>
-        <pose>0 1.51 0 0 -0 1.5708</pose>
+      <visual name="visual">
+        <pose>0 1.6 0.0 0 -0 1.57</pose>
         <geometry>
           <mesh>
             <scale>5 5 5</scale>
             <uri>model://f1_renault_ackerman/Renault/chasis.dae</uri>
-          </mesh>
-        </geometry>
+        </mesh>
+      </geometry>
       </visual>
       <!-- <velocity_decay/> -->
       <!--  <gravity>1</gravity> -->
@@ -62,8 +108,9 @@
       <!--  <gravity>1</gravity> -->
     </link>
 
+    <!-- BACK LEFT WHEEL -->
     <joint name='bl_axle' type='revolute'>
-      <pose relative_to='chassis_link'>-0.775 -1.83364 0.324997 0 -0 0</pose>
+      <pose relative_to='chassis_link'>-0.775 -1.47364 0.304997 0 -0 0</pose>
       <parent>chassis_link</parent>
       <child>bl_1</child>
       <axis>
@@ -73,6 +120,7 @@
         </dynamics>
       </axis>
     </joint>
+
     <link name='bl_1'>
       <pose relative_to='bl_axle'>0 0 0 0 -0 0</pose>
       <inertial>
@@ -108,7 +156,7 @@
         </surface>
       </collision>
       <visual name='bl_1_visual'>
-        <pose>0.875 1.0136 0.1444 0 -0 0</pose>
+        <pose>0.875 1.01364 0.1444 0 -0 0</pose>
         <geometry>
           <mesh>
             <scale>0.1 0.1 0.1</scale>
@@ -121,8 +169,9 @@
       <self_collide>0</self_collide>
     </link>
 
+    <!-- BACK RIGHT WHEEL -->
     <joint name='br_axle' type='revolute'>
-      <pose relative_to='chassis_link'>0.775 -1.83364 0.324997 0 -0 0</pose>
+      <pose relative_to='chassis_link'>0.775 -1.45364 0.304997 0 -0 0</pose>
       <parent>chassis_link</parent>
       <child>br_1</child>
       <axis>
@@ -132,6 +181,7 @@
         </dynamics>
       </axis>
     </joint>
+
     <link name='br_1'>
       <pose relative_to='br_axle'>0 0 0 0 -0 0</pose>
       <inertial>
@@ -167,7 +217,7 @@
         </surface>
       </collision>
       <visual name='br_1_visual'>
-        <pose>-0.875 1.0136 0.1444 0 -0 0</pose>
+        <pose>-0.875 1.01364 0.1444 0 -0 0</pose>
         <geometry>
           <mesh>
             <scale>0.1 0.1 0.1</scale>
@@ -180,8 +230,9 @@
       <self_collide>0</self_collide>
     </link>
 
+    <!-- FRONT LEFT WHEEL -->
     <joint name='l_steer' type='revolute'>
-      <pose relative_to='chassis_link'>-0.825 1.51736 0.324997 0 -0 0</pose>
+      <pose relative_to='chassis_link'>-0.72 1.61736 0.324997 0 -0 0</pose>
       <parent>chassis_link</parent>
       <child>l_steer_1</child>
       <axis>
@@ -195,6 +246,7 @@
         </dynamics>
       </axis>
     </joint>
+
     <link name='l_steer_1'>
       <pose relative_to='l_steer'>0 0 0 0 -0 0</pose>
       <inertial>
@@ -225,6 +277,7 @@
         </dynamics>
       </axis>
     </joint>
+
     <link name='fl_1'>
       <pose relative_to='fl_axle'>0 0 0 0 -0 0</pose>
       <inertial>
@@ -272,9 +325,10 @@
       <!-- <velocity_decay/> -->
       <self_collide>0</self_collide>
     </link>
-    
+
+    <!-- FRONT RIGHT WHEEL -->
     <joint name='r_steer' type='revolute'>
-      <pose relative_to='chassis_link'>0.825 1.51736 0.324997 0 -0 0</pose>
+      <pose relative_to='chassis_link'>0.725 1.61736 0.324997 0 -0 0</pose>
       <parent>chassis_link</parent>
       <child>r_steer_1</child>
       <axis>
@@ -289,6 +343,7 @@
         </dynamics>
       </axis>
     </joint>
+
     <link name='r_steer_1'>
       <pose relative_to='r_steer'>0 0 0 0 -0 0</pose>
       <inertial>
@@ -307,6 +362,7 @@
       <!-- <velocity_decay/> -->
       <self_collide>0</self_collide>
     </link>
+
     <joint name='fr_axle' type='revolute'>
       <pose relative_to='r_steer_1'>0.05 0 0 0 -0 0</pose>
       <parent>r_steer_1</parent>
@@ -450,9 +506,8 @@
 
       <odometry_frame>odom</odometry_frame>
       <robot_base_frame>chasis_link</robot_base_frame>
-
     </plugin>
-
+  
   </model>
 
 </sdf>
