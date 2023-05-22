@@ -3,3 +3,5 @@
 /workspace/install
 /workspace/build
 /workspace/log
+dl_car_control/dataset/
+*/__pycache__/
