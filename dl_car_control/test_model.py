@@ -8,7 +8,7 @@ import time
 import hal as HAL
 import matplotlib.pyplot as plt
 
-ort_session = ort.InferenceSession("first_mynet.onnx",providers=['CPUExecutionProvider'])
+ort_session = ort.InferenceSession("mynet.onnx",providers=['CPUExecutionProvider'])
 
 def user_main():
 
@@ -17,15 +17,16 @@ def user_main():
     # height, width
     height = image.shape[0]
     width = image.shape[1]
-    input_size =[239, 640]
+    input_size =[60, 200]
     #crop image
     if height > 100:
         cropped_image = image[((height//2)+1):height, 0:width]
+        resized_image = cv2.resize(cropped_image, (200, 60))
         # Display cropped image
 
         cv2.imshow("cropped", cropped_image)
         cv2.waitKey(1)
-        input_tensor = cropped_image.reshape((1, 3, input_size[0], input_size[1])).astype(np.float32)
+        input_tensor = resized_image.reshape((1, 3, input_size[0], input_size[1])).astype(np.float32)
         # Inference
         ort_inputs = {ort_session.get_inputs()[0].name: input_tensor}
         output = ort_session.run(None, ort_inputs)[0][0]

@@ -13,10 +13,10 @@ prev_prev_err = 0
 prev_angular_control = 0
 prev_linear_control = 0
 
-max_linear_vel = 5
-Ts = 1/12
+max_linear_vel = 7
+Ts = 1/30
 iteration = 0
-writer_output = csv.writer(open(os.getcwd() + "/output.csv", "w"))
+writer_output = csv.writer(open(os.getcwd() + "/output_montmelo.csv", "w"))
 def user_main():
     global prev_err
     global prev_prev_err
@@ -60,9 +60,9 @@ def user_main():
         
         #angular vel control
         
-        K_p=0.0020
-        K_d=0.0015
-        K_i=0.0009
+        K_p=0.0005
+        K_d=0.00001
+        K_i=0.00000
         
         angular_control=prev_angular_control+(K_p+K_i*(Ts/2)+K_d/Ts)*err +(-K_p+K_i*(Ts/2)-2*(K_d/Ts))*prev_err+(K_d/Ts)*prev_prev_err
         HAL.setW(angular_control)
@@ -82,16 +82,19 @@ def user_main():
         #cv2.putText(image, "err: "+str(err), (50,100),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
         #cv2.imshow("Imagen", image)
-
-        #crop image
-        cropped_image = image[((height//2)+1):height, 0:width]
-        # Display cropped image
-        cv2.imshow("cropped", cropped_image)
-        cv2.imwrite(os.getcwd() +'/dataset/image' + str(iteration) + '.jpg', cropped_image)
-        cv2.waitKey(1)
         prev_prev_err=prev_err
         prev_err=err
         prev_angular_control=angular_control
+        #crop image
+        cropped_image = image[((height//2)+1):height, 0:width]
+        resized_image = cv2.resize(cropped_image, (200, 60))
+        # Display cropped image
+        cv2.imshow("cropped", resized_image)
+        cv2.waitKey(1)
+        
+        cv2.imwrite(os.getcwd() +'/dataset_montmelo/image' + str(iteration) + '.jpg', resized_image)
+        
+
         iteration = iteration + 1
 
         #write to file

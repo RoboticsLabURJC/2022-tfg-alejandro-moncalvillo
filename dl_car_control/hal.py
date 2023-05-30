@@ -8,6 +8,8 @@ from rclpy.executors import MultiThreadedExecutor
 import geometry_msgs.msg
 import numpy as np
 from std_msgs.msg import String
+import time
+from datetime import datetime
 
 class VelocityPublisher(Node):
 
@@ -100,10 +102,22 @@ def main(user_main,n_threads=1,args=None):
     executor = MultiThreadedExecutor(num_threads=n_threads)
     executor.add_node(image_subscriber)
     executor.add_node(velocity_publisher)
+    frequency = 30
+    time_cycle = 1000.0 / frequency
     try:
         while rclpy.ok():
+
+            start_time = datetime.now()
+            
             user_main()
             executor.spin_once()
+
+            finish_time = datetime.now()
+            dt = finish_time - start_time
+            ms = (dt.days * 24 * 60 * 60 + dt.seconds) * 1000 + dt.microseconds / 1000.0
+
+            if(ms < time_cycle):
+                time.sleep((time_cycle - ms) / 1000.0)
     except KeyboardInterrupt:
         pass
     finally:

@@ -49,8 +49,8 @@ def main():
     img = train_features[0]
     label = train_labels[0]
     
-    #print(img.type())
-    #print(img.size())
+    print(img.type())
+    print(img.size())
 
 
     

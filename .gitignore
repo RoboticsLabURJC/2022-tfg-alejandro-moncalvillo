@@ -1,7 +1,8 @@
-/data
+/data*
 /human_detection
 /workspace/install
 /workspace/build
 /workspace/log
-dl_car_control/dataset/
+dl_car_control/dataset*
 */__pycache__/
+*.onnx

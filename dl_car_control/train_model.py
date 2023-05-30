@@ -1,5 +1,6 @@
 from __future__ import print_function
 from dataset_test import *
+from pilotnet import *
 import argparse
 import torch
 import torchvision.models as models
@@ -15,34 +16,10 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torch.optim.lr_scheduler import StepLR
 
-class Net(nn.Module):
-    def __init__(self):
-        super(Net, self).__init__()
-        self.conv1 = nn.Conv2d(3, 8, 3, 1)
-        self.conv2 = nn.Conv2d(8, 16, 3, 1)
-        self.dropout1 = nn.Dropout(0.25)
-        self.dropout2 = nn.Dropout(0.5)
-        self.fc1 = nn.Linear(595296, 128)
-        self.fc2 = nn.Linear(128, 2)
-
-    def forward(self, x):
-        x = self.conv1(x)
-        x = F.relu(x)
-        x = self.conv2(x)
-        x = F.relu(x)
-        x = F.max_pool2d(x, 2)
-        x = self.dropout1(x)
-        x = torch.flatten(x, 1)
-        x = self.fc1(x)
-        x = F.relu(x)
-        x = self.dropout2(x)
-        x = self.fc2(x)
-        return x
-
 
 def train(args, model, device, train_loader, optimizer, epoch):
     model.train()
-    criterion = nn.SmoothL1Loss()
+    criterion = nn.MSELoss()
     for batch_idx, (data, target) in enumerate(train_loader):
         data, target = data.to(device), target.to(device)
         optimizer.zero_grad()
@@ -70,7 +47,7 @@ def main():
                         help='learning rate (default: 1.0)')
     parser.add_argument('--gamma', type=float, default=0.7, metavar='M',
                         help='Learning rate step gamma (default: 0.7)')
-    parser.add_argument('--no-cuda', action='store_true', default=False,
+    parser.add_argument('--use-cuda', action='store_true', default=False,
                         help='disables CUDA training')
     parser.add_argument('--no-mps', action='store_true', default=False,
                         help='disables macOS GPU training')
@@ -81,26 +58,27 @@ def main():
     parser.add_argument('--log-interval', type=int, default=10, metavar='N',
                         help='how many batches to wait before logging training status')
     parser.add_argument('--save-model', action='store_true', default=False,
-                        help='For Saving the current Model')
+                        help='For Saving the cucriterionrrent Model')
    
     args = parser.parse_args()
-    
-    use_cuda = True
 
-    training_data = CustomImageDataset('output.csv','dataset')
+    use_cuda = args.use_cuda
+
+    training_data = CustomImageDataset('output_simple.csv','dataset_simple')
 
     trainloader = DataLoader(training_data, batch_size=args.batch_size, shuffle=True)
-    #images = torch.Size([3, 239, 640])
-
-    model = Net()
 
     device = torch.device('cuda:0' if (use_cuda and torch.cuda.is_available()) else 'cpu')
 
-    model.to(device)
+    model = PilotNet((3,60,200), 2).to(device)
 
-    #criterion = nn.CrossEntropyLoss()
-    #optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
-    optimizer = optim.Adadelta(model.parameters(), lr=args.lr)
+    #optimizer = optim.Adadelta(model.parameters(), lr=args.lr)
+    #optimizer = optim.Adagrad(model.parameters(), lr=args.lr)
+    #optimizer = optim.Adam(model.parameters(), lr=args.lr)
+    #optimizer = optim.AdamW(model.parameters(), lr=args.lr)
+    #optimizer = optim.Adamax(model.parameters(), lr=args.lr)
+    #optimizer = optim.ASGD(model.parameters(), lr=args.lr)
+    optimizer = optim.SGD(model.parameters(), lr=args.lr)
 
     scheduler = StepLR(optimizer, step_size=1, gamma=args.gamma)
 
@@ -111,11 +89,11 @@ def main():
     print('Finished Training')
     
     if use_cuda:
-        dummy_input = torch.randn(1, 3, 239, 640,device=torch.device("cuda"))
+        dummy_input = torch.randn(1, 3, 60, 200,device=torch.device("cuda"))
     else:
-        dummy_input = torch.randn(1, 3, 239, 640)        
+        dummy_input = torch.randn(1, 3, 60, 200)        
 
-    torch.save(model.state_dict(), "mynet.pt")
+    #torch.save(model.state_dict(), "mynet.pt")
     torch.onnx.export(model, dummy_input, "mynet.onnx", verbose=True, export_params=True, opset_version=9, input_names=['input'], output_names=['output'])
 
 
