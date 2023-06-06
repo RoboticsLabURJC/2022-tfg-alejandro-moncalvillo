@@ -102,7 +102,7 @@ def main(user_main,n_threads=1,args=None):
     executor = MultiThreadedExecutor(num_threads=n_threads)
     executor.add_node(image_subscriber)
     executor.add_node(velocity_publisher)
-    frequency = 30
+    frequency = 20
     time_cycle = 1000.0 / frequency
     try:
         while rclpy.ok():

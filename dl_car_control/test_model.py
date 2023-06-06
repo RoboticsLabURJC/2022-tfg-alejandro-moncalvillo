@@ -27,10 +27,10 @@ def user_main():
         cv2.imshow("cropped", cropped_image)
         cv2.waitKey(1)
         input_tensor = resized_image.reshape((1, 3, input_size[0], input_size[1])).astype(np.float32)
-        # Inference
+        # Inference (min 20hz max 200hz)
         ort_inputs = {ort_session.get_inputs()[0].name: input_tensor}
         output = ort_session.run(None, ort_inputs)[0][0]
-        print(output)
+        #print(output)
 
         V_pred = output[0]
         W_pred = output[1]
