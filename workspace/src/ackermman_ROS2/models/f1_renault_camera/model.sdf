@@ -84,14 +84,14 @@
                     <radius>.1</radius>
                 </sphere>
             </geometry>
-        </visual> -->
+        </visual>-->
         <velocity_decay>
           <linear>0.000000</linear>
           <angular>0.000000</angular>
         </velocity_decay>
         <self_collide>0</self_collide>
         <kinematic>0</kinematic>
-        <gravity>1</gravity>
+        <gravity>0</gravity>
 
         <sensor name='cam_f1' type='camera'>
           <pose>0 2.7 0.2 0 0 1.57</pose>
@@ -164,7 +164,7 @@
         </velocity_decay>
         <self_collide>0</self_collide>
         <kinematic>0</kinematic>
-        <gravity>1</gravity>
+        <gravity>0</gravity>
 
         <sensor name='cam_float' type='camera'>
           <pose>0 -3 2 0 0.1 1.57</pose>

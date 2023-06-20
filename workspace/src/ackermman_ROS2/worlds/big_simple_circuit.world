@@ -2,10 +2,14 @@
 <sdf version="1.5">
   <world name="default">
     <gui fullscreen=0>
-      <camera name='user_camera'>
-        <pose >163.386 -27.202 3.35 0 0.31 -1.92</pose>
-        <view_controller>orbit</view_controller>
-        <projection_type>perspective</projection_type>
+      <camera name="user_camera">
+        <track_visual>
+          <name>f1_renault_camera</name>
+          <static>true</static>
+          <use_model_frame>true</use_model_frame>
+          <xyz>0 -5 1.53</xyz>
+          <inherit_yaw>true</inherit_yaw>
+        </track_visual>
       </camera>
     </gui>
     <scene>
@@ -28,7 +32,8 @@
     </include>
     <include>
       <uri>model://f1_renault_camera</uri>
-      <pose>160.386 -32.202 0.004 0 0 3.14159</pose>
+      <pose>160.386 -32.202 0.004 0 0 3.141590</pose>
     </include>
+
   </world>
 </sdf>

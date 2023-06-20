@@ -13,18 +13,18 @@ ort_session = ort.InferenceSession("mynet.onnx",providers=['CPUExecutionProvider
 def user_main():
 
     image= HAL.getImage()
-
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     # height, width
     height = image.shape[0]
     width = image.shape[1]
-    input_size =[60, 200]
+    input_size =[66, 200]
     #crop image
     if height > 100:
-        cropped_image = image[((height//2)+1):height, 0:width]
-        resized_image = cv2.resize(cropped_image, (200, 60))
+        cropped_image = image[240:480, 0:640]
+        resized_image = cv2.resize(cropped_image, (input_size[1], input_size[0]))
         # Display cropped image
 
-        cv2.imshow("cropped", cropped_image)
+        cv2.imshow("cropped", resized_image)
         cv2.waitKey(1)
         input_tensor = resized_image.reshape((1, 3, input_size[0], input_size[1])).astype(np.float32)
         # Inference (min 20hz max 200hz)
@@ -34,7 +34,7 @@ def user_main():
 
         V_pred = output[0]
         W_pred = output[1]
-
+        print(output)
         HAL.setV(V_pred)
         HAL.setW(W_pred)
 

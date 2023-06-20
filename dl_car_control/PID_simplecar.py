@@ -1,4 +1,3 @@
-
 import hal as HAL
 import cv2
 import numpy as np
@@ -51,31 +50,6 @@ class PID:
             self.last_sample = time.time()
         
         return out
-
-# Color filter
-red_mask = ([17, 15, 70], [50, 56, 255])
-center_offset = 20
-center_margin = 10
-black_pixel = np.array([0,0,0])
-
-# Angular pid
-sp1 = 320
-kp_1 = 0.01
-kd_1 = 0.026
-ki_1 = 0.00011
-outmax_1 = 3
-outmin_1 = -3.5
-
-# Car variables
-linear_speed = 5
-    
-# PIDS objects (angular and linear speed)
-pid1 = PID(kp_1, kd_1, ki_1, 0.03)
-pid1.set_lims(outmin_1, outmax_1)
-    
-# PIDS objects (angular and linear speed)
-pid1 = PID(kp_1, kd_1, ki_1, 0.03)
-pid1.set_lims(outmin_1, outmax_1)
 
 # Apply the color mask to the raw img and return the filtered image
 def filter_img(raw_image, c_mask):
@@ -133,6 +107,60 @@ def show_debug_img(img, ref):
     cv2.waitKey(1)
     #GUI.showImage(img)
 
+# Color filter
+red_mask = ([17, 15, 70], [50, 56, 255])
+center_offset = 20
+center_margin = 10
+black_pixel = np.array([0,0,0])
+# PID variables
+direct = 0
+
+# Angular pid
+sp1 = 320
+kp_1 = 0.005
+kd_1 = 0.0001
+ki_1 = 0.0
+outmax_1 = 2.5
+outmin_1 = -2.5
+
+# Linear pid
+kp_2 = 0.03
+kd_2 = 0.05
+ki_2 = 0.0001
+outmax_2 = 4
+outmin_2 = -4
+
+
+# Turn Angular pid
+kp_3 = 0.005
+kd_3 = 0.0001
+ki_3 = 0.0
+outmax_3 = 3
+outmin_3 = -3
+
+# Turn Linear pid
+kp_4 = 0.5
+kd_4 = 0.1
+ki_4 = 0.01
+outmax_4 = 7
+outmin_4 = -7
+
+# Car variables
+max_linear = 12
+
+# PIDS objects (angular and linear speed)
+pid1 = PID(kp_1, kd_1, ki_1, 0.03)
+pid1.set_lims(outmin_1, outmax_1)
+
+pid2 = PID(kp_2, kd_2, ki_2, 0.03)
+pid2.set_lims(outmin_2, outmax_2)
+
+pid3 = PID(kp_3, kd_3, ki_3, 0.03)
+pid3.set_lims(outmin_3, outmax_3)
+
+pid4 = PID(kp_4, kd_4, ki_4, 0.03)
+pid4.set_lims(outmin_4, outmax_4)
+
 
 def user_main():
 
@@ -145,27 +173,33 @@ def user_main():
     if height > 100:
         # The reference used for angular speed calculation
         ref1 = get_line_ref(f_img, center_offset, center_margin)
-
+ 
         if (ref1 != (0,0)):
-                
-                # Error calculation
-                ref1_x = ref1[0]
-                error = sp1 - ref1_x
-
+            
+            # Error calculation
+            ref1_x = ref1[0]
+            error = sp1 - ref1_x
+            
+            if abs(error) > 20:
+                angular_speed = pid3.calc(error)
+                linear_speed = max_linear - abs(pid4.calc(error))
+            else:
                 angular_speed = pid1.calc(error)
+                linear_speed = max_linear - abs(pid2.calc(error))
                 
-                # Control action
-                HAL.setW(angular_speed)
-                HAL.setV(linear_speed)
+            # Control action
+            print (angular_speed)
+            HAL.setW(angular_speed)
+            HAL.setV(linear_speed)
         else:
             HAL.setW(0)
             HAL.setV(0)
-            
+
+
         show_debug_img(f_img, ref1)
 
 
 def main():
-
     HAL.setW(0)
     HAL.setV(0)
     HAL.main(user_main)
@@ -173,5 +207,3 @@ def main():
 # Execute!
 if __name__ == "__main__":
     main()
-
-    

@@ -1,0 +1,118 @@
+<?xml version='1.0'?>
+<sdf version="1.4">
+<model name="f1_renault">
+  <pose>0 0 0 0 0 0</pose>
+  <static>false</static>
+  <link name="chassis_link">
+    	<pose>0 0 0 0 0 1.57</pose>
+	<inertial>
+        <mass>10</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0.0</ixy>
+          <iyy>1</iyy>
+          <ixz>0.0</ixz>
+          <iyz>0.0</iyz>
+          <izz>1.0</izz>
+      </inertia>
+    </inertial>
+    <collision name="collision">
+        <geometry>
+            <mesh>
+                 <uri>model://f1_renault/Renault/Car.obj</uri>
+                 <scale>1 1 1</scale>
+            </mesh>
+        </geometry>
+    </collision>
+    <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://f1_renault/Renault/Car.obj</uri>
+            <scale>1 1 1</scale>
+        </mesh>
+      </geometry>
+    </visual>
+    
+
+  </link>
+  <link name="camera_f1">
+        <pose>0 0 0 0 0 0</pose>
+        <inertial>
+          <mass>2</mass>
+            <inertia>
+                <ixx>1.000000</ixx>
+                <ixy>0.000000</ixy>
+                <ixz>0.000000</ixz>
+                <iyy>1.000000</iyy>
+                <iyz>0.000000</iyz>
+                <izz>1.000000</izz>
+            </inertia>
+        </inertial>
+        <!-- Visual sphere to debug camera position-->
+        <!--<visual name='visual'>
+            <pose>0 2.5 0.7 0 0 0</pose>
+            <geometry>
+                <sphere>
+                    <radius>.1</radius>
+                </sphere>
+            </geometry>
+        </visual>-->
+        <velocity_decay>
+          <linear>0.000000</linear>
+          <angular>0.000000</angular>
+        </velocity_decay>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+        <gravity>0</gravity>
+
+        <sensor name='cam_f1' type='camera'>
+          <pose>0 2.5 0.7 0 0 1.57</pose>
+          <update_rate>20.000000</update_rate>
+          <camera name='cam'>
+            <horizontal_fov>1.570000</horizontal_fov>
+            <image>
+              <width>640</width>
+              <height>480</height>
+              <format>R8G8B8</format>
+            </image>
+            <clip>
+              <near>0.100000</near>
+              <far>15.000000</far>
+            </clip>
+          </camera>
+          <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+            <alwaysOn>true</alwaysOn>
+            <updateRate>0.0</updateRate>
+            <cameraName>camera</cameraName>
+            <imageTopicName>image_raw</imageTopicName>
+            <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+            <frameName>camera_f1</frameName>
+            <hackBaseline>0.07</hackBaseline>
+            <distortionK1>0.0</distortionK1>
+            <distortionK2>0.0</distortionK2>
+            <distortionK3>0.0</distortionK3>
+            <distortionT1>0.0</distortionT1>
+            <distortionT2>0.0</distortionT2>
+            <ros>
+                <namespace>f1ros2</namespace>
+            </ros>
+          </plugin>
+        </sensor>
+
+    </link>
+
+    <joint type="fixed" name="camera_f1_joint">
+        <pose>0 2.7 0.2 0 0 1.57</pose>
+        <child>camera_f1</child>
+        <parent>chassis_link</parent>
+    </joint>
+  <plugin name="object_controller" filename="libgazebo_ros_planar_move.so">
+      <namespace>f1ros2</namespace>
+      <commandTopic>cmd_vel</commandTopic>
+      <odometryTopic>odom</odometryTopic>
+      <odometryFrame>odom</odometryFrame>
+      <odometryRate>20.0</odometryRate>
+      <robotBaseFrame>chassis_link</robotBaseFrame>
+  </plugin>
+</model>
+</sdf>

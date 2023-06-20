@@ -7,7 +7,7 @@
       <uri>model://sun</uri>
     </include>
     <include>
-      <uri>model://f1_renault_camera</uri>
+      <uri>model://f1_renault</uri>
       <pose> 0.0 0.0 0.2 0 0 0 </pose>
     </include>
 

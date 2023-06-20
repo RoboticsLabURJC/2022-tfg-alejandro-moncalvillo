@@ -1,4 +1,3 @@
-
 import hal as HAL
 import cv2
 import numpy as np
@@ -91,9 +90,10 @@ direct = 0
 
 # Angular pid
 sp1 = 320
-kp_1 = 0.007
-kd_1 = 0.023
+kp_1 = 0.01
+kd_1 = 0.026
 ki_1 = 0.00011
+
 outmax_1 = 2
 outmin_1 = -2
 
@@ -130,7 +130,7 @@ def filter_img(raw_image, c_mask):
 
 # Gets a reference position between (center+offset, center+offset+margin)
 def get_line_ref(img, offset, margin):
-    
+   
     height = img.shape[0]
     width = img.shape[1]
 
@@ -169,22 +169,20 @@ def show_debug_img(img, ref):
     img = cv2.circle(img, ref, 4, (255, 255, 0), -1)
     # img = cv2.circle(img, set_point, 5, (0, 255, 255), -1)
     img = cv2.line(img, (set_point[0], 0), (set_point[0], height), (0, 255, 0), thickness=1)
+    
     cv2.imshow("imagen", img)
     cv2.waitKey(1)
-    #GUI.showImage(img)
-
 
 def user_main():
     
     raw_img = HAL.getImage()
-    f_img = filter_img(raw_img, red_mask)
 
-
-    height = raw_img.shape[0]
-
-    if height > 100:
+    if raw_img.shape[0] > 100:
+        f_img = filter_img(raw_img, red_mask)
+        
         # The reference used for angular speed calculation
         ref1 = get_line_ref(f_img, center_offset, center_margin)
+        
         if (ref1 != (0,0)):
             
             # Error calculation
@@ -198,7 +196,7 @@ def user_main():
             
             linear_speed = max_linear - max_lin_dec * norm_mean
             angular_speed = pid1.calc(error)
-            
+            print(angular_speed)
             # Control action
             HAL.setW(angular_speed)
             HAL.setV(linear_speed)
@@ -208,11 +206,9 @@ def user_main():
         
         show_debug_img(f_img, ref1)
 
-
 def main():
-
     HAL.setW(0)
-    HAL.setV(0)
+    #HAL.setV(0)
     HAL.main(user_main)
 
 # Execute!

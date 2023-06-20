@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python7
 import os
 
 import numpy as np
@@ -89,16 +89,16 @@ def user_main():
         cropped_image = image[((height//2)+1):height, 0:width]
         resized_image = cv2.resize(cropped_image, (200, 60))
         # Display cropped image
-        cv2.imshow("cropped", resized_image)
+        cv2.imshow("image", image)
         cv2.waitKey(1)
         
-        cv2.imwrite(os.getcwd() +'/dataset_montmelo/image' + str(iteration) + '.jpg', resized_image)
+        #cv2.imwrite(os.getcwd() +'/dataset_montmelo/image' + str(iteration) + '.jpg', resized_image)
         
 
         iteration = iteration + 1
 
         #write to file
-        writer_output.writerow(['image' + str(iteration) + '.jpg',abs(linear_control),angular_control])
+        #writer_output.writerow(['image' + str(iteration) + '.jpg',abs(linear_control),angular_control])
 
     else:
         HAL.setW(0)

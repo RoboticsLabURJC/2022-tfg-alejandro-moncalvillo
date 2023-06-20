@@ -35,7 +35,7 @@ class VelocityPublisher(Node):
     
     def timer_callback(self):
         msg = geometry_msgs.msg.Twist()
-        msg.linear.x = float(self.v)
+        msg.linear.y = float(self.v)
         msg.angular.z = float(self.w)
         self.pub.publish(msg)
 
@@ -102,7 +102,7 @@ def main(user_main,n_threads=1,args=None):
     executor = MultiThreadedExecutor(num_threads=n_threads)
     executor.add_node(image_subscriber)
     executor.add_node(velocity_publisher)
-    frequency = 20
+    frequency = 15
     time_cycle = 1000.0 / frequency
     try:
         while rclpy.ok():

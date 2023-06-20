@@ -53,6 +53,7 @@ install(DIRECTORY
 )
 install(DIRECTORY
   models/autocar
+  models/f1_renault
   models/f1_renault_ackerman
   models/f1_renault_camera
   models/f1_renault_followline
