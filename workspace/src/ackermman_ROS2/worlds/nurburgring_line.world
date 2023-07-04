@@ -5,21 +5,25 @@
       <uri>model://sun</uri>
     </include>
     <include>
-      <uri>model://nurburgring_line</uri>
+      <uri>model://big_nurburgring_line</uri>
       <pose>0 0 0 0 0 0</pose>
     </include>
-    <include>
-      <uri>model://f1renault_ros2</uri>
-      <pose>-74.29 37.74 0 0 0 -0.51</pose>
-    </include>
-    <gui fullscreen='0'>
-        <camera name='user_camera'>
-            <pose frame=''>-78.70 39.10 1.32 0.00 0.21 -0.37</pose>
-            <view_controller>orbit</view_controller>
-            <projection_type>perspective</projection_type>
-        </camera>
-    </gui>
 
+    <include>
+      <uri>model://f1_renault_camera</uri>
+      <pose>-220.9 112.13 0.01 0 0 -2.125</pose>
+    </include>
+    <gui fullscreen=0>
+      <camera name="user_camera">
+        <track_visual>
+          <name>f1_renault_camera</name>
+          <static>true</static>
+          <use_model_frame>true</use_model_frame>
+          <xyz>0 -5 1.53</xyz>
+          <inherit_yaw>true</inherit_yaw>
+        </track_visual>
+      </camera>
+    </gui>
     <scene>
         <sky>
 	    <clouds>

@@ -58,13 +58,12 @@ install(DIRECTORY
   models/f1_renault_camera
   models/f1_renault_followline
   models/f1ros2
-  models/montmelo_line
-  models/montreal_line
-  models/nurburgring_line
-  models/simple_circuit
+  models/big_montmelo_line
+  models/big_montreal_line
+  models/big_nurburgring_line
+  models/big_simple_circuit
   models/taxi_holo_autoparking
   models/taxi_holo_ros2
-  models/big_simple_circuit
   DESTINATION ${GAZEBO_MODEL_PATH})
 
 ament_package()

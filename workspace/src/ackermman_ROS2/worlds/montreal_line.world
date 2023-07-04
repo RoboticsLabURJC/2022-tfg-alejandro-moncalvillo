@@ -1,16 +1,17 @@
 <?xml version="1.0"?>
 <sdf version="1.4">
   <world name="default">
+  
     <include>
       <uri>model://sun</uri>
     </include>
     <include>
-      <uri>model://montreal_line</uri>
+      <uri>model://big_montreal_line</uri>
       <pose>0 0 0 0 0 0</pose>
     </include>
     <include>
       <uri>model://f1_renault_camera</uri>
-      <pose>-200.88 -90.72 0.00 0.00 0.00 -2.83</pose>
+      <pose>-603.06 -272.513 0.00 0.00 0.00 1.85</pose>
     </include>
     <gui fullscreen='0'>
       <camera name="user_camera">
