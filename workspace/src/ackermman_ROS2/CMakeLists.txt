@@ -53,11 +53,11 @@ install(DIRECTORY
 )
 install(DIRECTORY
   models/autocar
-  models/f1_renault
   models/f1_renault_ackerman
   models/f1_renault_camera
   models/f1_renault_followline
   models/f1ros2
+  models/big_many_curves
   models/big_montmelo_line
   models/big_montreal_line
   models/big_nurburgring_line

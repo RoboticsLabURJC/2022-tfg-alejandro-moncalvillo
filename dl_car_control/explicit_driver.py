@@ -5,7 +5,7 @@ import os
 import numpy as np
 import time
 import cv2
-import hal as HAL
+import utils.hal as HAL
 import csv
 
 class Brain:
@@ -45,16 +45,16 @@ class Brain:
         else:
             rotation = -(0.0065 * deviation + 0.0005 * (deviation - self.deviation_left))
 
-        speed = 5
+        speed = 6
         return speed, rotation
 
     def straight_case(self, deviation, dif):
         if abs(dif) < 35:
             rotation = -(0.0054 * deviation + 0.0005 * (deviation - self.deviation_left))
-            speed = 13
+            speed = 15
         elif abs(dif) < 90:
             rotation = -(0.0052 * deviation + 0.0005 * (deviation - self.deviation_left))
-            speed = 11
+            speed = 13
         else:
             rotation = -(0.0049 * deviation + 0.0005 * (deviation - self.deviation_left))
             speed = 9
@@ -73,7 +73,7 @@ class Brain:
         else:
             rotation = -(0.0075 * deviation + 0.0005 * (deviation - self.deviation_left))
 
-        speed = 5
+        speed = 6
         return speed, rotation
     def get_point(self, index, img):
         mid = 0

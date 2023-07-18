@@ -72,12 +72,7 @@ def main():
 
     model = PilotNet((3,60,200), 2).to(device)
 
-    #optimizer = optim.Adadelta(model.parameters(), lr=args.lr)
-    #optimizer = optim.Adagrad(model.parameters(), lr=args.lr)
-    #optimizer = optim.Adam(model.parameters(), lr=args.lr)
-    #optimizer = optim.AdamW(model.parameters(), lr=args.lr)
-    #optimizer = optim.Adamax(model.parameters(), lr=args.lr)
-    #optimizer = optim.ASGD(model.parameters(), lr=args.lr)
+
     optimizer = optim.SGD(model.parameters(), lr=args.lr)
 
     scheduler = StepLR(optimizer, step_size=1, gamma=args.gamma)

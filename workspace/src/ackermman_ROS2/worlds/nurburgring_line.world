@@ -24,13 +24,7 @@
         </track_visual>
       </camera>
     </gui>
-    <scene>
-        <sky>
-	    <clouds>
-	        <speed>12</speed>
-	    </clouds>
-	</sky>
-    </scene>
+
 
   </world>
 </sdf>

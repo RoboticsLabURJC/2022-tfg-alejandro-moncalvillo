@@ -4,5 +4,6 @@
 /workspace/build
 /workspace/log
 dl_car_control/dataset*
+dl_car_control/experiments*
 */__pycache__/
 *.onnx

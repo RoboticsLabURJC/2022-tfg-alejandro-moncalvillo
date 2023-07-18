@@ -5,7 +5,7 @@ import os
 import numpy as np
 import time
 import cv2
-import hal as HAL
+import utils.hal as HAL
 import csv
 
 class Brain:
@@ -37,46 +37,45 @@ class Brain:
         dif = x_middle_left_middle - self.x_middle_left_above
 
         if abs(dif) < 80:
-            rotation = -(0.008 * deviation + 0.0005 * (deviation - self.deviation_left))
+            rotation = -(0.003 * deviation + 0.00018 * (deviation - self.deviation_left))
         elif abs(dif) < 130:
-            rotation = -(0.0075 * deviation + 0.0005 * (deviation - self.deviation_left))
+            rotation = -(0.0025 * deviation + 0.00018 * (deviation - self.deviation_left))
         elif abs(dif) < 190:
-            rotation = -(0.007 * deviation + 0.0005 * (deviation - self.deviation_left))
+            rotation = -(0.002 * deviation + 0.00018 * (deviation - self.deviation_left))
         else:
-            rotation = -(0.0065 * deviation + 0.0005 * (deviation - self.deviation_left))
+            rotation = -(0.0015 * deviation + 0.00018 * (deviation - self.deviation_left))
 
-        speed = 8
+        speed = 3.5
         return speed, rotation
 
     def straight_case(self, deviation, dif):
         if abs(dif) < 35:
-            rotation = -(0.0054 * deviation + 0.0005 * (deviation - self.deviation_left))
-            speed = 14
+            rotation = -(0.0014 * deviation + 0.00018 * (deviation - self.deviation_left))
+            speed = 13
         elif abs(dif) < 90:
-            rotation = -(0.00522 * deviation + 0.0005 * (deviation - self.deviation_left))
-            speed = 12
+            rotation = -(0.0012 * deviation + 0.00018 * (deviation - self.deviation_left))
+            speed = 11
         else:
-            rotation = -(0.00491 * deviation + 0.0005 * (deviation - self.deviation_left))
-            speed = 10
+            rotation = -(0.0019 * deviation + 0.00018 * (deviation - self.deviation_left))
+            speed = 6
 
         return speed, rotation
 
     def curve_case(self, deviation, dif):
         if abs(dif) < 50:
-            rotation = -(0.01 * deviation + 0.0006 * (deviation - self.deviation_left))
-            speed = 8
+            rotation = -(0.004 * deviation + 0.00021 * (deviation - self.deviation_left))
         elif abs(dif) < 80:
-            rotation = -(0.0092 * deviation + 0.0005 * (deviation - self.deviation_left))
-            speed = 8
+            rotation = -(0.0032 * deviation + 0.00019 * (deviation - self.deviation_left))
         elif abs(dif) < 130:
-            rotation = -(0.0087 * deviation + 0.0005 * (deviation - self.deviation_left))
+            rotation = -(0.0027 * deviation + 0.00018 * (deviation - self.deviation_left))
         elif abs(dif) < 190:
-            rotation = -(0.0081 * deviation + 0.0005 * (deviation - self.deviation_left))
+            rotation = -(0.002 * deviation + 0.00018 * (deviation - self.deviation_left))
         else:
-            rotation = -(0.0076 * deviation + 0.0005 * (deviation - self.deviation_left))
+            rotation = -(0.0035 * deviation + 0.00018 * (deviation - self.deviation_left))
 
-        speed = 7
+        speed = 3.5
         return speed, rotation
+
     def get_point(self, index, img):
         mid = 0
         if np.count_nonzero(img[index]) > 0:
@@ -88,10 +87,7 @@ class Brain:
     def execute(self):
         image = HAL.getImage()
 
-        if self.mode == "save":
-            cv2.imwrite('./montmelo_data/' + str(self.iteration) + '.jpg', image)
-            self.iteration += 1
-
+        
         if image.shape[0] > 50:
             image_cropped = image[230:, :, :]
             image_hsv = cv2.cvtColor(image_cropped, cv2.COLOR_BGR2HSV)
@@ -99,7 +95,9 @@ class Brain:
             upper_red = np.array([180, 255, 255])
             image_mask = cv2.inRange(image_hsv, lower_red, upper_red)
 
-
+            if self.mode == "save":
+                cv2.imwrite('./montmelo_data/' + str(self.iteration) + '.jpg', image_cropped)
+                self.iteration += 1
 
             rows, cols = image_mask.shape
             rows = rows - 1  # para evitar desbordamiento
@@ -151,8 +149,10 @@ class Brain:
                     x = float(((-dif) * (310 - 350))) / float(260 - 350) + x_middle_left_down
 
                     if abs(x - x_middle_left_middle) < 3:
+                        
                         speed, rotation = self.straight_case(deviation, dif)
                     else:
+                        
                         speed, rotation = self.curve_case(deviation, dif)
 
                 # We update the deviation
@@ -164,7 +164,6 @@ class Brain:
                 else:
                     rotation = 1
                 speed = -0.6
-
             HAL.setV(speed)
             HAL.setW(rotation)
             if self.mode == "save":
