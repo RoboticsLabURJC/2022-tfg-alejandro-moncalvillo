@@ -15,7 +15,9 @@ def load_data(folder):
     reader = csv.DictReader(file)
     data = []
     for row in reader: # reading all values
-        data.append((row['v'], row['w']))
+        #data.append((row['v'], row['w']))
+        data.append((row['w']))
+
     file.close()
     return images, data
 
@@ -35,6 +37,8 @@ def get_images(list_images, type_image, array_imgs):
             padding_right = 200 - target_width - padding_left
             img = cv2.copyMakeBorder(img_resized.copy(),0,0,padding_left,padding_right,cv2.BORDER_CONSTANT,value=[0, 0, 0])
         array_imgs.append(img)
+        #cv2.imshow("cropped", img)
+        #cv2.waitKey(1)
 
     return array_imgs
 
@@ -51,9 +55,10 @@ def parse_json(data, array):
 
 def parse_csv(data, array):
     # Process csv
-    for v, w in data:
-        array.append((float(v), float(w)))
-
+    #for v, w in data:
+        #array.append((float(v), float(w)))
+    for w in data:
+        array.append((float(w)))
     return array
 
 def preprocess_data(array, imgs, data_type):
@@ -63,10 +68,11 @@ def preprocess_data(array, imgs, data_type):
     array_flip = []
     for i in tqdm(range(len(imgs))):
         flip_imgs.append(cv2.flip(imgs[i], 1))
-        array_flip.append((array[i][0], -array[i][1]))
+        #array_flip.append((array[i][0], -array[i][1]))
+        array_flip.append((-array[i]))
     new_array = array + array_flip
     new_array_imgs = imgs + flip_imgs
-
+    
     if data_type == 'extreme':
         extreme_case_1_img = []
         extreme_case_2_img = []
@@ -84,7 +90,7 @@ def preprocess_data(array, imgs, data_type):
         new_array += extreme_case_1_array*5 + extreme_case_2_array*10
         new_array_imgs += extreme_case_1_img*5 + extreme_case_2_img*10
 
-    new_array = normalize_annotations(new_array)
+    #new_array = normalize_annotations(new_array)
 
     return new_array, new_array_imgs
 

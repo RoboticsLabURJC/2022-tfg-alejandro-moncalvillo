@@ -99,7 +99,7 @@ if __name__=="__main__":
     val_loader = DataLoader(dataset, batch_size=batch_size, sampler=test_sampler)
 
     # Load Model
-    
+
     pilotModel = PilotNet(dataset.image_shape, dataset.num_labels).to(device)
     if os.path.isfile( model_save_dir + '/pilot_net_model_{}.ckpt'.format(random_seed)):
         pilotModel.load_state_dict(torch.load(model_save_dir + '/pilot_net_model_{}.ckpt'.format(random_seed),map_location=device))
@@ -126,12 +126,16 @@ if __name__=="__main__":
         for i, (images, labels) in enumerate(train_loader):
             
             images = FLOAT(images).to(device)
-            #imagen= torch.permute(images[0], (1, 2, 0))
+
+	        #imagen= torch.permute(images[0], (1, 2, 0))
             #numpy_array = imagen.numpy()
-            #cv2.imshow("grayscale image", numpy_array);
+            #cv2.imshow("image", numpy_array);
             #cv2.waitKey(0);  
-            #print(numpy_array.shape)
-            labels = FLOAT(labels.float()).to(device)
+            #print(numpy_array.shape)	
+
+            #labels = FLOAT(labels.float()).to(device)
+            labels = FLOAT(labels.float()).to(device).unsqueeze(1)
+
             # Run the forward pass
             outputs = pilotModel(images)
             loss = criterion(outputs, labels)
@@ -162,10 +166,11 @@ if __name__=="__main__":
             val_loss = 0 
             for images, labels in val_loader:
                 images = FLOAT(images).to(device)
-                labels = FLOAT(labels.float()).to(device)
+                #labels = FLOAT(labels.float()).to(device)
+                labels = FLOAT(labels.float()).to(device).unsqueeze(1)
                 outputs = pilotModel(images)
                 val_loss += criterion(outputs, labels).item()
-                
+              
             val_loss /= len(val_loader) # take average
             writer.add_scalar("performance/valid_loss", val_loss, epoch+1)
 
@@ -192,9 +197,11 @@ if __name__=="__main__":
         test_loss = 0
         for images, labels in tqdm(test_loader):
             images = FLOAT(images).to(device)
-            labels = FLOAT(labels.float()).to(device)
+            #labels = FLOAT(labels.float()).to(device)
+            labels = FLOAT(labels.float()).to(device).unsqueeze(1)
             outputs = pilotModel(images)
             test_loss += criterion(outputs, labels).item()
+        print(outputs)
     
     writer.add_scalar('performance/Test_MSE', test_loss/len(test_loader))
     print(f'Test loss: {test_loss/len(test_loader)}')
@@ -206,4 +213,4 @@ if __name__=="__main__":
     else:
         dummy_input = torch.randn(1, 3, 66, 200)   
 
-    torch.onnx.export(pilotModel, dummy_input, "mynet.onnx", verbose=True, export_params=True, opset_version=9, input_names=['input'], output_names=['output'])
+    torch.onnx.export(best_model, dummy_input, "mynet.onnx", verbose=True, export_params=True, opset_version=9, input_names=['input'], output_names=['output'])

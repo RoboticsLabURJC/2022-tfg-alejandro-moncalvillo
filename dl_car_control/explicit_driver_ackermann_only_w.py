@@ -19,7 +19,7 @@ class Brain:
         self.mode = mode
         if mode == "save":
             self.writer_output = csv.writer(open(self.path + "/data.csv", "w"))
-            self.writer_output.writerow(['image_name','v','w'])
+            self.writer_output.writerow(['image_name','w'])
         else:
             self.writer_output = None
 
@@ -89,11 +89,12 @@ class Brain:
     def execute(self):
         image = HAL.getImage()
 
-        if self.mode == "save":
-            cv2.imwrite(self.path + "/" + str(self.iteration) + ".png", image)
-            self.iteration += 1
-
         if image.shape[0] > 50:
+
+            if self.mode == "save":
+                cv2.imwrite(self.path + "/" + str(self.iteration) + ".png", image)
+                self.iteration += 1
+
             image_cropped = image[230:, :, :]
             image_hsv = cv2.cvtColor(image_cropped, cv2.COLOR_BGR2HSV)
             lower_red = np.array([0, 50, 50])
@@ -166,16 +167,16 @@ class Brain:
                     rotation = 1
                 speed = -0.6
 
-            HAL.setV(speed)
+            HAL.setV(4)
             HAL.setW(rotation)
             if self.mode == "save":
-                self.writer_output.writerow([str(self.iteration) + '.png',speed,rotation])
+                self.writer_output.writerow([str(self.iteration) + '.png',rotation])
         else:
             time.sleep(3)
 
 
 
-brain = Brain(mode="save",circuit = "manycurves")
+brain = Brain(mode="save",circuit = "montreal")
 
 def user_main():
     brain.execute()
