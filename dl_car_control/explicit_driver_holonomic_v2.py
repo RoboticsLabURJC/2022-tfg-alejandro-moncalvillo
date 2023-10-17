@@ -1,13 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import os
-
 import numpy as np
 import time
 import cv2
 import utils.hal_holonomic as HAL
 import csv
 import argparse
+
 class Brain:
 
     def __init__(self, mode, circuit):
@@ -21,9 +21,14 @@ class Brain:
 
         self.path = os.getcwd()
         self.case_str = 'none'
+        if not os.path.exists(self.path + "/" + self.circuit +"_holonomic"): 
+            # if the circuit folder is not present  
+            # then create it. 
+            os.makedirs(self.path + "/" + self.circuit +"_holonomic") 
 
         if mode == "save":
             self.writer_output = csv.writer(open(self.path + "/" + self.circuit +"_holonomic"+ "/data.csv", "w"))
+            self.writer_output.writerow(["image_name", "v","w"])
         else:
             self.writer_output = None
 
@@ -94,16 +99,15 @@ class Brain:
         if image.shape == (3, 3, 3):
             time.sleep(3)
 
-        # cv2.imwrite(PRETRAINED_MODELS + 'montmelo_data/' + str(self.iteration) + '.jpg', image)
-        # self.iteration += 1
-
         try:
             image_cropped = image[230:, :, :]
             image_hsv = cv2.cvtColor(image_cropped, cv2.COLOR_BGR2HSV)
             lower_red = np.array([0, 50, 50])
             upper_red = np.array([180, 255, 255])
             image_mask = cv2.inRange(image_hsv, lower_red, upper_red)
-
+            if self.mode == "save":
+                cv2.imwrite(self.path + "/" + self.circuit + "_holonomic" + "/" + str(self.iteration) + ".png", image)
+                self.iteration += 1
             # show image in gui -> frame_0
 
             rows, cols = image_mask.shape
@@ -178,7 +182,7 @@ class Brain:
             HAL.setW(rotation)
 
             if self.mode == "save":
-                self.writer_output.writerow([self.case_str,speed,rotation])
+                self.writer_output.writerow([str(self.iteration) + ".png",speed,rotation])
 
         except Exception as err:
             print(err)
