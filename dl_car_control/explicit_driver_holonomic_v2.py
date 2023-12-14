@@ -105,9 +105,11 @@ class Brain:
             lower_red = np.array([0, 50, 50])
             upper_red = np.array([180, 255, 255])
             image_mask = cv2.inRange(image_hsv, lower_red, upper_red)
+            
             if self.mode == "save":
-                cv2.imwrite(self.path + "/" + self.circuit + "_holonomic" + "/" + str(self.iteration) + ".png", image)
                 self.iteration += 1
+                cv2.imwrite(self.path + "/" + self.circuit + "_holonomic" + "/" + str(self.iteration) + ".png", image)
+                
             # show image in gui -> frame_0
 
             rows, cols = image_mask.shape

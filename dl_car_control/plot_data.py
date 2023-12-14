@@ -2,10 +2,12 @@ import time
 import pandas as pd
 import matplotlib.pyplot as plt
 
+df_1 = pd.read_csv("./simple_holonomic/data.csv")
+print(df_1.groupby('Type').size())
+"""
 figure, axis = plt.subplots(2, 2)
 
 figure.tight_layout()
-
 df_1 = pd.read_csv("./simple_holonomic/data.csv")
 print(df_1.groupby('Type').size())
 print(df_1.groupby('Type').mean())
@@ -29,7 +31,7 @@ print(df_4.groupby('Type').size())
 print(df_4.groupby('Type').mean())
 df_4.groupby('Type').size().plot(kind='pie',ax= axis[1,1])
 axis[1, 1].set_title("Nurburgring")
-
+"""
 
 
 plt.show()

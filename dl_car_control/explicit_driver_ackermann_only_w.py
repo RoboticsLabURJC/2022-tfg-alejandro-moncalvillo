@@ -7,6 +7,7 @@ import time
 import cv2
 import utils.hal as HAL
 import csv
+import argparse
 
 class Brain:
 
@@ -17,7 +18,15 @@ class Brain:
         self.circuit = circuit 
         self.path = os.getcwd() + "/" + circuit + "_data"
         self.mode = mode
+        self.path = os.getcwd()
+        self.case_str = 'none'
+
         if mode == "save":
+            if not os.path.exists(self.path + "/" + self.circuit +"_ackermann_w"): 
+                # if the circuit folder is not present  
+                # then create it. 
+                os.makedirs(self.path + "/" + self.circuit +"_ackermann_w") 
+            self.path = self.path + "/" + self.circuit +"_ackermann_w"
             self.writer_output = csv.writer(open(self.path + "/data.csv", "w"))
             self.writer_output.writerow(['image_name','w'])
         else:
@@ -92,8 +101,9 @@ class Brain:
         if image.shape[0] > 50:
 
             if self.mode == "save":
-                cv2.imwrite(self.path + "/" + str(self.iteration) + ".png", image)
                 self.iteration += 1
+                cv2.imwrite(self.path + "/" + str(self.iteration) + ".png", image)
+                
 
             image_cropped = image[230:, :, :]
             image_hsv = cv2.cvtColor(image_cropped, cv2.COLOR_BGR2HSV)
@@ -172,11 +182,22 @@ class Brain:
             if self.mode == "save":
                 self.writer_output.writerow([str(self.iteration) + '.png',rotation])
         else:
-            time.sleep(3)
+            time.sleep(1)
 
 
+def parse_args():
+    parser = argparse.ArgumentParser()
 
-brain = Brain(mode="save",circuit = "montreal")
+
+    parser.add_argument("--mode", type=str, default=None, help="To save or not to save the data")
+    parser.add_argument("--circuit", type=str, default="simple", help="Name of the circuit")
+
+    args = parser.parse_args()
+    return args
+
+args = parse_args()
+brain = Brain(args.mode, args.circuit)
+brain = Brain(args.mode, args.circuit)
 
 def user_main():
     brain.execute()

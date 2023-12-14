@@ -12,8 +12,8 @@ import warnings
 def parse_args():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--mode", type=str, default=None, help="To save or not to save the data")
     parser.add_argument('-f','--directory', nargs='+', help='Name of the directory with the data to balance', required=True)
+    parser.add_argument("--data_ratios", action='append', help="Ratios for each type of data")
 
     args = parser.parse_args()
     return args
@@ -47,44 +47,73 @@ def max_index_two(data):
     
     return index_list
 
-#Balances the dataset contained in the directory passed, it must have a data.csv file
-def balance_single_dataset(directory):
-    path = os.getcwd()
-    old_file = path + "/" + directory + "/old_data.csv"
-    new_file = path + "/" + directory + "/data.csv"
 
-    if not os.path.exists(new_file):
+
+
+
+
+
+def create_balanced_dataset(new_directory,old_directory,data,ratios,total_data):
+    image_num = 1
+    for data_type in data
+        for entry in data_type
+            image_name = entry[0]
+            ang_vel = entry[1]
+            writer_output.writerow([image_num,ang_vel])
+            image = cv2.imread(directory + image_name)
+            cv2.imwrite(str(image_num) + ".png", image)
+            image_num= image_num + 1
+            
+    return
+#Balances the dataset contained in the directory passed, it must have a data.csv file
+def balance_single_dataset(directory,ratios):
+    path = str(os.getcwd())
+    
+    old_data_file = open(path + "/" + directory + "/data.csv")
+
+    if not os.path.exists(path + "/" + directory + "/data.csv"):
         print("data.csv file not found in " + directory)
         return False
-
-    os.rename(new_file, old_file)
-
-    old_csv = pd.read_csv(old_file)
-
-    types = old_csv.groupby('v').size().axes[0]
-    types_sizes = old_csv.groupby('v').size().values
-
-    sizes_index = max_index_two(types_sizes)
-    max_index = sizes_index[0]
-    second_max_index = sizes_index[1]
-
-    max_rows = old_csv.loc[old_csv['v'] == types[max_index]]
-
-    other_rows = old_csv.loc[old_csv['v'] != types[max_index]]
-    other_rows.to_csv(new_file,index=False)
-
-    rand_list = random_num_list(types_sizes[max_index],types_sizes[second_max_index])
+    if not os.path.exists(path + "/" + directory + "_balanced"): 
+        # if the circuit folder is not present  
+        # then create it. 
+        os.makedirs(path + "/" + directory + "_balanced")
     
-    writer_output = csv.writer(open(new_file, "a"))
+    balanced_directory = path + "/" + directory + "_balanced"
 
-    for i in range(types_sizes[second_max_index]):
-        rand_index = rand_list[i]
-        image_name = max_rows.iloc[[rand_index]]['image_name'].values[0]
-        vel = max_rows.iloc[[rand_index]]['v'].values[0]
-        ang_vel = max_rows.iloc[[rand_index]]['w'].values[0]
-        writer_output.writerow([image_name,vel,ang_vel])
+    csvreader = csv.reader(old_data_file)
     
-    print("Balanced data.csv file in directory " + directory)
+    header = []
+    header = next(csvreader)
+
+    type_1 = []
+    type_2 = []
+    type_3 = []
+    total=0
+
+    for row in csvreader:
+        data_w = float(row[1])
+        if abs(data_w)< 0.20:
+            type_1.append(row)
+        elif abs(data_w)> 0.20 and abs(data_w)< 1.00:
+            type_2.append(row)
+        elif abs(data_w)> 1.00:
+            type_3.append(row)
+        total = total + 1
+
+    """   
+    print("Tipo 1: " + str(len(type_1)/total))
+    print("Tipo 2: " + str(len(type_2)/total))
+    print("Tipo 3: " + str(len(type_3)/total))
+    """ 
+
+    old_data_file.close()
+
+    create_balanced_dataset(path + "/" + directory, balanced_directory, [type_1,type_2,type_3],ratios,total)
+
+
+    print("Balanced data.csv file in directory: " + balanced_directory)
+    
     return True
 
 #Removes the images not listed in the data.csv file
@@ -113,7 +142,7 @@ def remove_old_images(directory):
 
 #For each image in the data.csv file creates a mirrored one and
 #appends
-def generate_mirrored_images(directory):
+def generate_extreme_cases_images(directory):
 
     path = os.getcwd()
     data_path = path + "/" + directory + "/data.csv"
@@ -138,10 +167,9 @@ def generate_mirrored_images(directory):
 def main():
     args = parse_args()
     for directory in args.directory:
-        if not balance_single_dataset(directory):
+        if not balance_single_dataset(directory,args.data_ratios):
             pass
-        remove_old_images(directory)
-        generate_mirrored_images(directory)
+        
 
 
 

@@ -30,9 +30,9 @@ def user_main():
         # Inference (min 20hz max 200hz)
         ort_inputs = {ort_session.get_inputs()[0].name: input_tensor}
         output = ort_session.run(None, ort_inputs)[0][0]
-        print(output)
-        HAL.setV(output[1])
-        HAL.setW(output[0])
+        #print(output)
+        HAL.setV(output[0])
+        HAL.setW(output[1])
 
 
 

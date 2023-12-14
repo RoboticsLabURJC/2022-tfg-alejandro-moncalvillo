@@ -71,7 +71,8 @@ if __name__=="__main__":
     print_terminal = args.print_terminal
 
     # Device Selection (CPU/GPU)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    #device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cpu")
     FLOAT = torch.FloatTensor
 
     # Tensorboard Initialization
@@ -101,8 +102,15 @@ if __name__=="__main__":
     # Load Model
 
     pilotModel = PilotNet(dataset.image_shape, dataset.num_labels).to(device)
-    if os.path.isfile( model_save_dir + '/pilot_net_model_{}.ckpt'.format(random_seed)):
+    
+    if os.path.isfile( model_save_dir + '/pilot_net_model_best_{}.pth'.format(random_seed)):
+        pilotModel.load_state_dict(torch.load(model_save_dir + '/pilot_net_model_best_{}.pth'.format(random_seed),map_location=device))
+        pilotModel.train()
+        best_model = deepcopy(pilotModel)
+        last_epoch = json.load(open(model_save_dir+'/args.json',))['last_epoch']+1
+    elif os.path.isfile( model_save_dir + '/pilot_net_model_{}.ckpt'.format(random_seed)):
         pilotModel.load_state_dict(torch.load(model_save_dir + '/pilot_net_model_{}.ckpt'.format(random_seed),map_location=device))
+        pilotModel.train()
         best_model = deepcopy(pilotModel)
         last_epoch = json.load(open(model_save_dir+'/args.json',))['last_epoch']+1
     else:
@@ -154,7 +162,7 @@ if __name__=="__main__":
                 print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}'
                     .format(epoch + 1, num_epochs, i + 1, total_step, loss.item()))
         
-        # add entry of last epoch                            
+        # Add entry of last epoch                            
         with open(model_save_dir+'/args.json', 'w') as fp:
             json.dump({'last_epoch': epoch}, fp)
 
@@ -186,20 +194,20 @@ if __name__=="__main__":
         print('Epoch [{}/{}], Validation Loss: {:.4f}'.format(epoch + 1, num_epochs, val_loss), mssg)
         
 
-    pilotModel = best_model # allot the best model on validation 
+  
     # Test the model
     transformations_val = createTransform([]) # only need Normalize()
     test_set = PilotNetDataset(args.test_dir, transformations_val, preprocessing=args.preprocess)
     test_loader = DataLoader(test_set, batch_size=batch_size)
     print("Check performance on testset")
-    pilotModel.eval()
+    best_model.eval() # get the best model on validation 
     with torch.no_grad():
         test_loss = 0
         for images, labels in tqdm(test_loader):
             images = FLOAT(images).to(device)
             #labels = FLOAT(labels.float()).to(device)
             labels = FLOAT(labels.float()).to(device).unsqueeze(1)
-            outputs = pilotModel(images)
+            outputs = best_model(images)
             test_loss += criterion(outputs, labels).item()
         print(outputs)
     
@@ -207,10 +215,12 @@ if __name__=="__main__":
     print(f'Test loss: {test_loss/len(test_loader)}')
         
     # Save the model and plot
-    torch.save(pilotModel.state_dict(), model_save_dir + '/pilot_net_model_{}.ckpt'.format(random_seed))
-    if torch.cuda.is_available():
-        dummy_input = torch.randn(1, 3, 66, 200,device=torch.device("cuda"))
-    else:
-        dummy_input = torch.randn(1, 3, 66, 200)   
+    torch.save(best_model.state_dict(), model_save_dir + '/pilot_net_model_{}.ckpt'.format(random_seed))
+
+    #if torch.cuda.is_available():
+        #dummy_input = torch.randn(1, 3, 66, 200,device=torch.device("cuda"))
+    #else:
+        #dummy_input = torch.randn(1, 3, 66, 200)   
+    dummy_input = torch.randn(1, 3, 66, 200)   
 
     torch.onnx.export(best_model, dummy_input, "mynet.onnx", verbose=True, export_params=True, opset_version=9, input_names=['input'], output_names=['output'])

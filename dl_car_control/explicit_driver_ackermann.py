@@ -90,8 +90,8 @@ class Brain:
         image = HAL.getImage()
 
         if self.mode == "save":
-            cv2.imwrite(self.path + "/" + str(self.iteration) + ".png", image)
             self.iteration += 1
+            cv2.imwrite(self.path + "/" + str(self.iteration) + ".png", image)
 
         if image.shape[0] > 50:
             image_cropped = image[230:, :, :]

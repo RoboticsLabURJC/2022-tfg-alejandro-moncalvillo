@@ -22,6 +22,7 @@ def user_main():
     if height > 100:
         cropped_image = image[240:480, 0:640]
         resized_image = cv2.resize(cropped_image, (input_size[1], input_size[0]))
+        img = cv2.resize(img, (int(200), int(66)))
         # Display cropped image
 
         #cv2.imshow("cropped", resized_image)
