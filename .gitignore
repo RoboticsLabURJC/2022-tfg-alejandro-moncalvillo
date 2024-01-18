@@ -1,12 +1,11 @@
 /data*
-
 /human_detection
 /workspace/install
 /workspace/build
 /workspace/log
-dl_car_control/*_data
-dl_car_control/experiments*
-dl_car_control/datasets*
+dl_car_control/*/*_data
+dl_car_control/*/experiments*
+dl_car_control/*/datasets*
 */__pycache__/
 *.onnx
 *.pth
