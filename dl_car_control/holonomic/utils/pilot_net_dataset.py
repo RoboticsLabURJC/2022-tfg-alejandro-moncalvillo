@@ -10,7 +10,6 @@ class PilotNetDataset(Dataset):
     def __init__(self, path_to_data, transforms=None, preprocessing=None):
 
         self.data_path = path_to_data
-        print(path_to_data)
         self.images = []
         self.labels = []
 
@@ -33,14 +32,14 @@ class PilotNetDataset(Dataset):
             all_images, all_data = load_data(path)
             self.images = get_images(all_images, type_image, self.images)        
             self.labels = parse_csv(all_data, self.labels)
-
+        
         self.labels, self.images = preprocess_data(self.labels, self.images, data_type)
-
+        
         self.transforms = transforms
         
         self.image_shape = self.images[0].shape
         self.num_labels = np.array(self.labels[0]).shape[0]
-
+  
         self.count = len(self.images)
         
     def __getitem__(self, index):
@@ -48,10 +47,10 @@ class PilotNetDataset(Dataset):
         img = self.images[index]
         label = np.array(self.labels[index])
         data = Image.fromarray(img)
-
+        
         if self.transforms is not None:
             data = self.transforms(data)
-
+        
         return (data, label)
 
     def __len__(self):

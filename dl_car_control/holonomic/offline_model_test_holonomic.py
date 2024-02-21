@@ -8,7 +8,7 @@ import time
 import cv2
 import torch
 from torchvision import transforms
-import utils.hal as HAL
+import utils.hal_holonomic as HAL
 from utils.pilotnet import PilotNet
 from datetime import datetime
 
@@ -26,8 +26,13 @@ def parse_args():
 def main():
 
     # Device Selection (CPU/GPU)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    #device = torch.device("cpu")
+
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+        device_type = "cuda"
+    else:
+        device = torch.device("cpu")
+        device_type = "cpu"
 
 
     data_w_array= []
@@ -59,6 +64,9 @@ def main():
     total_time = 0
     min = 20000
     max = -1
+    total_mult = 0
+    total_loss_v = 0
+    total_loss_w = 0
     for line in reader_csv:
         
         if first_line:
@@ -67,7 +75,7 @@ def main():
                     
             
         image = cv2.imread(path + "/" + args.test_dir + "/" + line[0])
-        print(path + "/" + args.test_dir + "/" + line[0])
+        #print(path + "/" + args.test_dir + "/" + line[0])
         start_time = datetime.now()
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         # height, width
@@ -80,9 +88,9 @@ def main():
         resized_image = cv2.resize(cropped_image, (int(input_size[1]), int(input_size[0])))
 
         # Display cropped image
-        cv2.imshow("image", resized_image)       
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        #cv2.imshow("image", resized_image)       
+        #cv2.waitKey(0)
+        #cv2.destroyAllWindows()
 
         input_tensor = preprocess(resized_image).to(device)
 
@@ -95,16 +103,30 @@ def main():
 
         output = pilotModel(input_batch)
         
-        #print(output[0])
-        
-        net_v_array.append(output[0].detach().numpy()[0])
 
-        net_w_array.append(output[0].detach().numpy()[1])
+        if device_type == "cpu":
+
+            net_v_array.append(output[0].detach().numpy()[0])
+
+        
+            net_w_array.append((output[0].detach().numpy()[1]))
+
+            total_loss_v = total_loss_v + abs(float(line[1])-output[0].detach().numpy()[0]) 
+            total_loss_w = total_loss_w + abs(float(line[2])-output[0].detach().numpy()[1]) 
+
+        else:
+            
+            net_v_array.append(output.data.cpu().numpy()[0][0])
+
+        
+            net_w_array.append(output.data.cpu().numpy()[0][1])
+
+            total_loss_v = total_loss_v + abs(float(line[1])-output.data.cpu().numpy()[0][0]) 
+            total_loss_w = total_loss_w +  abs(float(line[2])-output.data.cpu().numpy()[0][1])
+
+
 
         data_v_array.append(float(line[1]))
-        print(output[0].detach().numpy()[0])
-        print(float(line[1]))
-
         data_w_array.append(float(line[2]))
         n_array.append(count)
         
@@ -116,7 +138,8 @@ def main():
             min = ms
         if ms > max:
             max = ms
-        
+        #if not float(line[2]) == 0:
+            #total_mult = total_mult + (output[0].detach().numpy()[1]/float(line[2]))
         count = count + 1
         
 
@@ -124,20 +147,24 @@ def main():
     data_file.close()
 
     print("Tiempo medio:"+str(total_time/count))
+    print("Error medio v:"+str(total_loss_v/count))
+    print("Error medio w:"+str(total_loss_w/count))
     print("Tiempo min:"+str(min))
     print("Tiempo max:"+str(max))
+    #print("Mult_w: "+ str(total_mult/count))
 
-
+    
     plt.subplot(1, 2, 1)
     plt.plot(n_array, data_v_array, label = "controller", color='b')
     plt.plot(n_array, net_v_array, label = "net", color='tab:orange')
-
+    plt.title("Lineal speed") 
     plt.subplot(1, 2, 2)
     plt.plot(n_array, data_w_array, label = "controller", color='b')
     plt.plot(n_array, net_w_array, label = "net", color='tab:orange')
+    plt.title("Angular speed") 
 
     plt.show()
-
+    
     print("FIN")
 
 

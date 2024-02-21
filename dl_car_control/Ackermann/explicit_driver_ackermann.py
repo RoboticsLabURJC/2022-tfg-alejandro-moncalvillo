@@ -7,6 +7,7 @@ import time
 import cv2
 import utils.hal as HAL
 import csv
+import argparse
 
 class Brain:
 
@@ -15,11 +16,16 @@ class Brain:
         self.deviation_left = 0
         self.iteration = 0
         self.circuit = circuit 
-        self.path = os.getcwd() + "/" + circuit + "_data"
+        self.path = os.getcwd() + "/" + "datasets"
         self.mode = mode
         if mode == "save":
+            if not os.path.exists(self.path + "/" + self.circuit +"_ackermann"): 
+                # if the circuit folder is not present  
+                # then create it. 
+                os.makedirs(self.path + "/" + self.circuit +"_ackermann") 
+            self.path = self.path + "/" + self.circuit +"_ackermann"
             self.writer_output = csv.writer(open(self.path + "/data.csv", "w"))
-            self.writer_output.writerow(['image_name','v','w'])
+            self.writer_output.writerow(['image_name','w','v'])
         else:
             self.writer_output = None
 
@@ -71,12 +77,15 @@ class Brain:
             speed = 8
         elif abs(dif) < 130:
             rotation = -(0.0087 * deviation + 0.0005 * (deviation - self.deviation_left))
+            speed = 4
         elif abs(dif) < 190:
             rotation = -(0.0081 * deviation + 0.0005 * (deviation - self.deviation_left))
+            speed = 4
         else:
             rotation = -(0.0076 * deviation + 0.0005 * (deviation - self.deviation_left))
+            speed = 4
 
-        speed = 4
+        
         return speed, rotation
     def get_point(self, index, img):
         mid = 0
@@ -174,8 +183,19 @@ class Brain:
             time.sleep(3)
 
 
+def parse_args():
+    parser = argparse.ArgumentParser()
 
-brain = Brain(mode="save",circuit = "manycurves")
+
+    parser.add_argument("--mode", type=str, default=None, help="To save or not to save the data")
+    parser.add_argument("--circuit", type=str, default="simple", help="Name of the circuit")
+
+    args = parser.parse_args()
+    return args
+
+args = parse_args()
+brain = Brain(args.mode, args.circuit)
+
 
 def user_main():
     brain.execute()

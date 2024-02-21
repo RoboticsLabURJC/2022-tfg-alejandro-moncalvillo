@@ -197,7 +197,7 @@ def parse_args():
 
 args = parse_args()
 brain = Brain(args.mode, args.circuit)
-brain = Brain(args.mode, args.circuit)
+
 
 def user_main():
     brain.execute()

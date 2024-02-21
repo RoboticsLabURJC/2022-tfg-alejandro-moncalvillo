@@ -7,5 +7,9 @@ dl_car_control/*/*_data
 dl_car_control/*/experiments*
 dl_car_control/*/datasets*
 */__pycache__/
+*/__pycache__*
 *.onnx
 *.pth
+*.pyc
+*.pyo
+*.ckpt

@@ -26,8 +26,13 @@ def parse_args():
 def main():
 
     # Device Selection (CPU/GPU)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    #device = torch.device("cpu")
+
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+        device_type = "cuda"
+    else:
+        device = torch.device("cpu")
+        device_type = "cpu"
 
 
     data_w_array= []
@@ -57,6 +62,7 @@ def main():
     total_time = 0
     min = 20000
     max = -1
+    total_loss_w = 0
     for line in reader_csv:
         
         if first_line:
@@ -94,8 +100,18 @@ def main():
         output = pilotModel(input_batch)
         
         #print(output)
+        if device_type == "cpu":
         
-        net_w_array.append(output.detach().numpy()[0])
+            net_w_array.append((output[0].detach().numpy()[0]))
+
+            total_loss_w = total_loss_w + abs(float(line[1])-output[0].detach().numpy()[0]) 
+
+        else:
+        
+            net_w_array.append(output.data.cpu().numpy()[0][0])
+
+   
+            total_loss_w = total_loss_w +  abs(float(line[1])-output.data.cpu().numpy()[0][0]) 
 
         data_w_array.append(float(line[1]))
         n_array.append(count)
@@ -116,6 +132,7 @@ def main():
     data_file.close()
 
     print("Tiempo medio:"+str(total_time/count))
+    print("Error medio w:"+str(total_loss_w/count))
     print("Tiempo min:"+str(min))
     print("Tiempo max:"+str(max))
     plt.plot(n_array, data_w_array, label = "controller", color='b')
