@@ -183,7 +183,6 @@ class Brain:
             HAL.setV(speed)
             HAL.setW(rotation)
             
-         
             if self.mode == "save":
                 self.writer_output.writerow([str(self.iteration) + ".png",speed,rotation])
 

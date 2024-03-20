@@ -45,6 +45,8 @@ def user_main():
     preprocess = transforms.Compose([
         transforms.ToTensor()
     ]) 
+
+
     #crop image
     if height > 100:
         
@@ -63,8 +65,6 @@ def user_main():
         output = ort_session.run(None, ort_inputs)[0][0]
         #print(output)
         """
-
-
 
         input_tensor = preprocess(resized_image).to(device)
         input_batch = input_tensor.unsqueeze(0)

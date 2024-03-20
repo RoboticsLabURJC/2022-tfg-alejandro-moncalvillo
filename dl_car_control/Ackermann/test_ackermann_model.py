@@ -70,8 +70,7 @@ def user_main():
         output = pilotModel(input_batch)
         v = output[0].detach().numpy()[0]
         w = output[0].detach().numpy()[1]
-        print(v)
-        print(w)
+
         
         HAL.setV(v)
         HAL.setW(w)

@@ -210,7 +210,7 @@
 
     <!-- BACK LEFT WHEEL -->
     <joint name='bl_axle' type='revolute'>
-      <pose relative_to='chassis_link'>-0.775 -1.45364 0.304997 0 -0 0</pose>
+      <pose relative_to='chassis_link'>-0.775 -1.75364 0.304997 0 -0 0</pose>
       <parent>chassis_link</parent>
       <child>bl_1</child>
       <axis>
@@ -271,7 +271,7 @@
 
     <!-- BACK RIGHT WHEEL -->
     <joint name='br_axle' type='revolute'>
-      <pose relative_to='chassis_link'>0.775 -1.45364 0.304997 0 -0 0</pose>
+      <pose relative_to='chassis_link'>0.775 -1.75364 0.304997 0 -0 0</pose>
       <parent>chassis_link</parent>
       <child>br_1</child>
       <axis>
@@ -342,7 +342,7 @@
           <upper>0.95</upper>
         </limit>
         <dynamics>
-          <friction>18.0474092253</friction>
+          <friction>12.031606150200002</friction>
         </dynamics>
       </axis>
     </joint>
@@ -439,7 +439,7 @@
         </limit>
         <dynamics>
           <damping>0.01</damping>
-          <friction>18.0474092253</friction>
+          <friction>12.031606150200002</friction>
         </dynamics>
       </axis>
     </joint>

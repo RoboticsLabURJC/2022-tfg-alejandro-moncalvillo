@@ -98,11 +98,15 @@ class Brain:
     def execute(self):
         image = HAL.getImage()
 
-        if self.mode == "save":
-            self.iteration += 1
-            cv2.imwrite(self.path + "/" + str(self.iteration) + ".png", image)
 
         if image.shape[0] > 50:
+
+
+            if self.mode == "save":
+                self.iteration += 1
+                cv2.imwrite(self.path + "/" + str(self.iteration) + ".png", image)
+
+
             image_cropped = image[230:, :, :]
             image_hsv = cv2.cvtColor(image_cropped, cv2.COLOR_BGR2HSV)
             lower_red = np.array([0, 50, 50])

@@ -19,6 +19,8 @@ class VelocityPublisher(Node):
         self.v = 0.0
         self.w = 0.0
         self.pub = self.create_publisher(geometry_msgs.msg.Twist, '/f1ros2/cmd_vel', 10)
+
+        
         self.timer = self.create_timer(0.05, self.timer_callback)
     
     def getV(self):

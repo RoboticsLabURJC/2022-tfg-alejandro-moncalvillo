@@ -64,6 +64,9 @@ install(DIRECTORY
   models/big_simple_circuit
   models/taxi_holo_autoparking
   models/taxi_holo_ros2
+  models/prius_ackermann_3laser
+  models/lincoln
+
   DESTINATION ${GAZEBO_MODEL_PATH})
 
 ament_package()

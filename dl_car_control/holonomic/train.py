@@ -118,7 +118,7 @@ if __name__=="__main__":
     # Train the model
     total_step = len(train_loader)
     global_iter = 0
-    global_val_mse = 1
+    global_val_mse = 2
 
 
     print("*********** Training Started ************")
