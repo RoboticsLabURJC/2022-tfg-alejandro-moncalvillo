@@ -64,7 +64,7 @@ def main():
     total_time = 0
     min = 20000
     max = -1
-    total_mult = 0
+
     total_loss_v = 0
     total_loss_w = 0
     for line in reader_csv:
@@ -138,8 +138,7 @@ def main():
             min = ms
         if ms > max:
             max = ms
-        #if not float(line[2]) == 0:
-            #total_mult = total_mult + (output[0].detach().numpy()[1]/float(line[2]))
+
         count = count + 1
         
 
@@ -151,7 +150,7 @@ def main():
     print("Error medio w:"+str(total_loss_w/count))
     print("Tiempo min:"+str(min))
     print("Tiempo max:"+str(max))
-    #print("Mult_w: "+ str(total_mult/count))
+
 
     
     plt.subplot(1, 2, 1)

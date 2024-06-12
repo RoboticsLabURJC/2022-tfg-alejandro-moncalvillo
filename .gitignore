@@ -13,3 +13,5 @@ dl_car_control/*/datasets*
 *.pyc
 *.pyo
 *.ckpt
+*.txt
+*.jpg

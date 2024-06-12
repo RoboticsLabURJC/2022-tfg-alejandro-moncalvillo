@@ -20,12 +20,12 @@ class Brain:
         self.mode = mode
         if mode == "save":
             if not os.path.exists(self.path + "/" + self.circuit +"_ackermann"): 
-                # if the circuit folder is not present  
+                # if the circuit directory is not present  
                 # then create it. 
                 os.makedirs(self.path + "/" + self.circuit +"_ackermann") 
             self.path = self.path + "/" + self.circuit +"_ackermann"
             self.writer_output = csv.writer(open(self.path + "/data.csv", "w"))
-            self.writer_output.writerow(['image_name','w','v'])
+            self.writer_output.writerow(["image_name","v","w"])
         else:
             self.writer_output = None
 
@@ -57,34 +57,34 @@ class Brain:
 
     def straight_case(self, deviation, dif):
         if abs(dif) < 35:
-            rotation = -(0.0045 * deviation + 0.0005 * (deviation - self.deviation_left))
+            rotation = -(0.0035 * deviation + 0.0005 * (deviation - self.deviation_left))
             speed = 14
         elif abs(dif) < 90:
             rotation = -(0.004 * deviation + 0.0005 * (deviation - self.deviation_left))
             speed = 12
         else:
-            rotation = -(0.0039 * deviation + 0.0005 * (deviation - self.deviation_left))
-            speed = 6
+            rotation = -(0.0029 * deviation + 0.0005 * (deviation - self.deviation_left))
+            speed = 10
 
         return speed, rotation
 
     def curve_case(self, deviation, dif):
         if abs(dif) < 50:
-            rotation = -(0.01 * deviation + 0.0006 * (deviation - self.deviation_left))
+            rotation = -(0.002 * deviation + 0.00006 * (deviation - self.deviation_left))
             speed = 8
         elif abs(dif) < 80:
-            rotation = -(0.0092 * deviation + 0.0005 * (deviation - self.deviation_left))
+            rotation = -(0.0018 * deviation + 0.00006 * (deviation - self.deviation_left))
             speed = 8
         elif abs(dif) < 130:
-            rotation = -(0.0087 * deviation + 0.0005 * (deviation - self.deviation_left))
-            speed = 4
+            rotation = -(0.00176 * deviation + 0.00006 * (deviation - self.deviation_left))
+            speed = 6
         elif abs(dif) < 190:
-            rotation = -(0.0081 * deviation + 0.0005 * (deviation - self.deviation_left))
-            speed = 4
+            rotation = -(0.00165 * deviation + 0.00005 * (deviation - self.deviation_left))
+            speed = 6
         else:
-            rotation = -(0.0076 * deviation + 0.0005 * (deviation - self.deviation_left))
-            speed = 4
-
+            rotation = -(0.0016 * deviation + 0.00005 * (deviation - self.deviation_left))
+            speed = 6
+        
         
         return speed, rotation
     def get_point(self, index, img):
@@ -154,7 +154,7 @@ class Brain:
                 self.x_middle_left_above = (position_x_above[0][0] + position_x_above[0][
                     len(position_x_above[0]) - 1]) / 2
                 # We look at the deviation from the central position. The center of the line is in position cols/2
-                deviation = self.x_middle_left_above - (cols / 2)
+                deviation = self.x_middle_left_above - (cols / 2) 
 
                 # If the row below has been lost we have a different case, which we treat as an exception
                 if not_found_down == True:
@@ -164,7 +164,7 @@ class Brain:
                     dif = x_middle_left_down - self.x_middle_left_above
                     x = float(((-dif) * (310 - 350))) / float(260 - 350) + x_middle_left_down
 
-                    if abs(x - x_middle_left_middle) < 3:
+                    if abs(x - x_middle_left_middle) < 9:
                         speed, rotation = self.straight_case(deviation, dif)
                     else:
                         speed, rotation = self.curve_case(deviation, dif)
@@ -174,10 +174,10 @@ class Brain:
             else:
                 # If the formula 1 leaves the red line, the line is searched
                 if self.x_middle_left_above > (columns / 2):
-                    rotation = -1
+                    rotation = -0.2
                 else:
-                    rotation = 1
-                speed = -0.6
+                    rotation = 0.2
+                speed = -2
 
             HAL.setV(speed)
             HAL.setW(rotation)

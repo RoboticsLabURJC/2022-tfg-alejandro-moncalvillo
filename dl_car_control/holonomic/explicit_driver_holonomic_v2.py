@@ -22,7 +22,7 @@ class Brain:
         self.path = os.getcwd()
         self.case_str = 'none'
         if not os.path.exists(self.path + "/" + self.circuit +"_holonomic"): 
-            # if the circuit folder is not present  
+            # if the circuit directory is not present  
             # then create it. 
             os.makedirs(self.path + "/" + self.circuit +"_holonomic") 
 

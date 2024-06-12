@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 class PilotNetDataset(Dataset):
-    def __init__(self, path_to_data, transforms=None, preprocessing=None):
+    def __init__(self, path_to_data, flip_images, transforms=None, preprocessing=None):
 
         self.data_path = path_to_data
         self.images = []
@@ -33,13 +33,15 @@ class PilotNetDataset(Dataset):
             self.images = get_images(all_images, type_image, self.images)        
             self.labels = parse_csv(all_data, self.labels)
         
-        self.labels, self.images = preprocess_data(self.labels, self.images, data_type)
-        
+ 
+        self.labels, self.images = preprocess_data(self.labels, self.images, flip_images, data_type)
+
+
         self.transforms = transforms
         
         self.image_shape = self.images[0].shape
         self.num_labels = np.array(self.labels[0]).shape[0]
-        
+
         self.count = len(self.images)
         
     def __getitem__(self, index):
@@ -50,6 +52,7 @@ class PilotNetDataset(Dataset):
         
         if self.transforms is not None:
             data = self.transforms(data)
+        
         
         return (data, label)
 

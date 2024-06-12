@@ -41,7 +41,7 @@ class GetKeyTrhead(threading.Thread):
         while (1):
             key = self.getKey()
             if key == "w":
-                if linear_speed < 12:
+                if linear_speed < 18:
                     linear_speed = linear_speed + 1
                 if (previous_speed < 0 and linear_speed >= 0):
                     angular_speed = -angular_speed
@@ -67,25 +67,11 @@ class GetKeyTrhead(threading.Thread):
 
 class CameraThread(threading.Thread):
 
-    def __init__(self, mode=None, circuit = "simple"):
+    def __init__(self):
         threading.Thread.__init__(self)
-        self.iteration = 0
-        self.circuit = circuit 
-        self.path = os.getcwd() + "/" + "datasets"
-        self.mode = mode
         self.coordinates_d = (450,120)
         self.coordinates_w = (450,100)
         self.coordinates_v = (450,80)
-        if mode == "save":
-            if not os.path.exists(self.path + "/" + self.circuit +"teleop_ackermann"): 
-                # if the circuit folder is not present  
-                # then create it. 
-                os.makedirs(self.path + "/" + self.circuit +"teleop_ackermann") 
-            self.path = self.path + "/" + self.circuit +"teleop_ackermann"
-            self.writer_output = csv.writer(open(self.path + "/data.csv", "w"))
-            self.writer_output.writerow(['image_name','w','v'])
-        else:
-            self.writer_output = None
 
     def check_center(self, position_x):
         if len(position_x[0]) > 1:
@@ -114,11 +100,6 @@ class CameraThread(threading.Thread):
                 sys.exit(0)
             image = HAL.getImage()
             if image.shape[0] > 50:
-
-                if self.mode == "save":
-                    self.iteration += 1
-                    cv2.imwrite(self.path + "/" + str(self.iteration) + ".png", image)
-
 
                 image_cropped = image[230:, :, :]
 
@@ -180,24 +161,50 @@ class CameraThread(threading.Thread):
                 cv2.putText(image, text_d, self.coordinates_d, cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0) , 1, cv2.LINE_AA)
                 cv2.imshow("Camara",image)
                 cv2.waitKey(1)
-                if self.mode == "save":
-                    self.writer_output.writerow([str(self.iteration) + '.png',linear_speed,angular_speed])
+
             else:
                 time.sleep(3)
 
 
 class Brain:
 
+    def __init__(self, mode=None, circuit = "simple"):
+        threading.Thread.__init__(self)
+        self.iteration = 0
+        self.circuit = circuit 
+        self.path = os.getcwd() + "/" + "datasets"
+        self.mode = mode
+
+        if mode == "save":
+            if not os.path.exists(self.path + "/" + self.circuit +"_teleop_ackermann"): 
+                # if the circuit directory is not present  
+                # then create it. 
+                os.makedirs(self.path + "/" + self.circuit +"_teleop_ackermann") 
+            self.path = self.path + "/" + self.circuit +"_teleop_ackermann"
+            self.writer_output = csv.writer(open(self.path + "/data.csv", "w"))
+            self.writer_output.writerow(['image_name','v','w'])
+        else:
+            self.writer_output = None
+
+
     def execute(self):
         global linear_speed
         global angular_speed
- 
-        HAL.setV(linear_speed)
-        HAL.setW(angular_speed)
-
+        global Finish_program
+        
+        image = HAL.getImage()
             
+        if image.shape[0] > 50:
 
+            HAL.setV(linear_speed)
+            HAL.setW(angular_speed)
 
+            if self.mode == "save":
+                self.iteration += 1
+                cv2.imwrite(self.path + "/" + str(self.iteration) + ".png", image)
+                self.writer_output.writerow([str(self.iteration) + '.png',linear_speed,angular_speed])
+        else:
+            time.sleep(1)
         
 
 def end_signal_handler(sig, frame):
@@ -216,7 +223,7 @@ def parse_args():
     return args
 
 args = parse_args()
-brain = Brain()
+brain = Brain(args.mode, args.circuit)
 
 def user_main():
     global Finish_program
@@ -233,7 +240,7 @@ def main():
     
     key_thread = GetKeyTrhead()
     key_thread.start()
-    cam_thread = CameraThread(args.mode, args.circuit)
+    cam_thread = CameraThread()
     cam_thread.start()
     signal.signal(signal.SIGINT, end_signal_handler)
     HAL.setW(0)

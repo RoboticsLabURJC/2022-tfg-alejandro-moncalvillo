@@ -33,7 +33,7 @@
     </include>
     <include>
       <uri>model://f1_renault_camera</uri>
-      <pose>-17.43 -68.08 0.019 0 0 1.06</pose>
+      <pose>278.66 -83.5 0.026 -0.006 0 -1.53</pose>
     </include>
   </world>
 

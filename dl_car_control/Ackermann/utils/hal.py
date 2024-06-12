@@ -54,7 +54,7 @@ class ImageSubscriber(Node):
         # from the video_frames topic. The queue size is 10 messages.
         self.subscription = self.create_subscription(
         Image, 
-        '/f1ros2/cam_f1/image_raw', 
+        '/f1ros2/cam_f1_left/image_raw', 
         self.listener_callback, 
         10)
         self.subscription # prevent unused variable warning

@@ -14,8 +14,7 @@ def load_data(folder):
     file = open(name_file, 'r')
     reader = csv.DictReader(file)
     data = []
-    for row in reader: # reading all values
-        #data.append((row['v'], row['w']))
+    for row in reader: 
         data.append((row['w']))
 
     file.close()

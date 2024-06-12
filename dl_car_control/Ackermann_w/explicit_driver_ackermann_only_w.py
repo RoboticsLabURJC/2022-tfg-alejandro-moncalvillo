@@ -23,7 +23,7 @@ class Brain:
 
         if mode == "save":
             if not os.path.exists(self.path + "/" + self.circuit +"_ackermann_w"): 
-                # if the circuit folder is not present  
+                # if the circuit directory is not present  
                 # then create it. 
                 os.makedirs(self.path + "/" + self.circuit +"_ackermann_w") 
             self.path = self.path + "/" + self.circuit +"_ackermann_w"

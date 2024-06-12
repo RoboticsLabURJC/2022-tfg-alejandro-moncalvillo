@@ -29,6 +29,7 @@ def parse_args():
     parser.add_argument("--base_dir", type=str, default='exp_random', help="Directory to save everything")
     parser.add_argument("--comment", type=str, default='Random Experiment', help="Comment to know the experiment")
     parser.add_argument("--data_augs", action='append', type=str, default=None, help="Data Augmentations")
+    parser.add_argument("--mirrored_imgs", action='append', type=bool, default=False, help="Add mirrored images to the train data")
     parser.add_argument("--num_epochs", type=int, default=100, help="Number of Epochs")
     parser.add_argument("--lr", type=float, default=1e-3, help="Learning rate for Policy Net")
     parser.add_argument("--test_split", type=float, default=0.2, help="Train test Split")
@@ -41,6 +42,12 @@ def parse_args():
     args = parser.parse_args()
     return args
 
+
+def my_loss(output, target):
+    loss = torch.mean((output - target)**2)
+    return loss
+
+
 if __name__=="__main__":
 
     args = parse_args()
@@ -52,10 +59,11 @@ if __name__=="__main__":
     base_dir = './experiments/'+ args.base_dir + '/'
     model_save_dir = base_dir + 'trained_models'
     log_dir = base_dir + 'log'
-
     check_path(base_dir)
     check_path(log_dir)
     check_path(model_save_dir)
+
+    print("Saving model in:" + model_save_dir)
 
     with open(base_dir+'args.json', 'w') as fp:
         json.dump(exp_setup, fp)
@@ -70,9 +78,9 @@ if __name__=="__main__":
     save_iter = args.save_iter
     random_seed = args.seed
     print_terminal = args.print_terminal
-
+    mirrored_img = args.mirrored_imgs
     # Device Selection (CPU/GPU)
-    #device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     device = torch.device("cpu")
     FLOAT = torch.FloatTensor
 
@@ -86,7 +94,7 @@ if __name__=="__main__":
     # Define data transformations
     transformations = createTransform(augmentations)
     # Load data
-    dataset = PilotNetDataset(path_to_data, transformations, preprocessing=args.preprocess)
+    dataset = PilotNetDataset(path_to_data, mirrored_img, transformations, preprocessing=args.preprocess)
 
 
     # Creating data indices for training and validation splits:
@@ -104,8 +112,8 @@ if __name__=="__main__":
     # Load Model
     
     pilotModel = PilotNet(dataset.image_shape, dataset.num_labels).to(device)
-    if os.path.isfile( model_save_dir + '/pilot_net_model_{}.ckpt'.format(random_seed)):
-        pilotModel.load_state_dict(torch.load(model_save_dir + '/pilot_net_model_{}.ckpt'.format(random_seed),map_location=device))
+    if os.path.isfile( model_save_dir + '/pilot_net_model_{}.pth'.format(random_seed)):
+        pilotModel.load_state_dict(torch.load(model_save_dir + '/pilot_net_model_{}.pth'.format(random_seed),map_location=device))
         best_model = deepcopy(pilotModel)
         last_epoch = json.load(open(model_save_dir+'/args.json',))['last_epoch']+1
     else:
@@ -118,7 +126,7 @@ if __name__=="__main__":
     # Train the model
     total_step = len(train_loader)
     global_iter = 0
-    global_val_mse = 1
+    global_val_mse = 0.01
 
 
     print("*********** Training Started ************")
@@ -131,7 +139,7 @@ if __name__=="__main__":
             images = FLOAT(images).to(device)
             #imagen= torch.permute(images[0], (1, 2, 0))
             #numpy_array = imagen.numpy()
-            #cv2.imshow("grayscale image", numpy_array);
+            #cv2.imshow("train image", numpy_array);
             #cv2.waitKey(0);  
             #print(numpy_array.shape)
             labels = FLOAT(labels.float()).to(device)
@@ -146,8 +154,7 @@ if __name__=="__main__":
             optimizer.step()
 
             if global_iter % save_iter == 0:
-                torch.save(pilotModel.state_dict(), model_save_dir + '/pilot_net_model_{}_last.pth'.format(random_seed))
-
+                torch.save(pilotModel.state_dict(), model_save_dir + '/pilot_net_model_{}.pth'.format(random_seed))
             global_iter += 1
 
             if print_terminal and (i + 1) % 10 == 0:
@@ -190,7 +197,8 @@ if __name__=="__main__":
     pilotModel = best_model # allot the best model on validation 
     # Test the model
     transformations_val = createTransform([]) 
-    test_set = PilotNetDataset(args.test_dir, transformations_val, preprocessing=args.preprocess)
+    
+    test_set = PilotNetDataset(args.test_dir,mirrored_img, transformations_val, preprocessing=args.preprocess)
     test_loader = DataLoader(test_set, batch_size=batch_size)
     print("Check performance on testset")
     pilotModel.eval()
@@ -206,13 +214,13 @@ if __name__=="__main__":
     print(f'Test loss: {test_loss/len(test_loader)}')
         
     # Save the model and plot
-    torch.save(pilotModel.state_dict(), model_save_dir + '/pilot_net_model_holonomic_{}.pth'.format(random_seed))
+    torch.save(pilotModel.state_dict(), model_save_dir + '/pilot_net_model_ackermann_{}.pth'.format(random_seed))
     
     net_file_name = "mynet_holo.onnx"
     
     if torch.cuda.is_available():
         dummy_input = torch.randn(1, 3, 66, 200,device=torch.device("cuda"))
-        net_file_name = "mynet_holo_gpu.onnx"
+        net_file_name = "mynet_holo_gpu" + str(random_seed) + ".onnx"
     else:
         dummy_input = torch.randn(1, 3, 66, 200)   
   

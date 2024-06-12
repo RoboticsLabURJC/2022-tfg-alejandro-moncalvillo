@@ -93,7 +93,7 @@
         <kinematic>0</kinematic>
         <gravity>0</gravity>
 
-        <sensor name='cam_f1' type='camera'>
+        <sensor name='cam_f1_left' type='camera'>
           <pose>0 2.7 0.5 0 0 1.57</pose>
           <update_rate>20.000000</update_rate>
           <camera name='cam'>
@@ -393,12 +393,12 @@
         </inertia>
       </inertial>
       <collision name='fl_1_collision'>
-        <pose>0.875 -1.5174 0.1444 0 -0 0</pose>
+        <pose relative_to='fl_axle'>0 0 0 0 1.5708 0</pose>
         <geometry>
-          <mesh>
-            <scale>0.001 0.001 0.001</scale>
-            <uri>model://autocar/meshes/fl_1.stl</uri>
-          </mesh>
+          <cylinder>
+            <radius>.3425</radius>
+            <length>.22</length>
+          </cylinder>
         </geometry>
         <surface>
           <contact>
@@ -406,8 +406,8 @@
           </contact>
           <friction>
             <ode>
-              <mu>1.1</mu>
-              <mu2>1.1</mu2>
+              <mu>1.7</mu>
+              <mu2>1.7</mu2>
             </ode>
           </friction>
         </surface>
@@ -489,12 +489,12 @@
         </inertia>
       </inertial>
       <collision name='fr_1_collision'>
-        <pose>-0.875 -1.5174 0.1444 0 -0 0</pose>
+        <pose relative_to='fr_axle'>0 0 0 0 1.5708 0</pose>
         <geometry>
-          <mesh>
-            <scale>0.001 0.001 0.001</scale>
-            <uri>model://autocar/meshes/fr_1.stl</uri>
-          </mesh>
+          <cylinder>
+            <radius>.3425</radius>
+            <length>.22</length>
+          </cylinder>
         </geometry>
         <surface>
           <contact>

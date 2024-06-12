@@ -15,7 +15,7 @@
       <geometry>
         <mesh>
           <uri>model://big_nurburgring_line/meshes/Circuito_Nurburgrin.dae</uri>
-          <scale>3 3 3</scale>
+          <scale>5 5 5</scale>
         </mesh>
       </geometry>
     </visual>
@@ -25,7 +25,7 @@
       <geometry>
         <mesh>
           <uri>model://big_nurburgring_line/meshes/Nurburgrin_Pared.dae</uri>
-          <scale>3 3 3</scale>
+          <scale>5 5 5</scale>
         </mesh>
       </geometry>
     </collision>
@@ -33,7 +33,7 @@
       <geometry>
         <mesh>
           <uri>model://big_nurburgring_line/meshes/Nurburgrin_Pared.dae</uri>
-          <scale>3 3 3</scale>
+          <scale>5 5 5</scale>
         </mesh>
       </geometry>
     </visual>

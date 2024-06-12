@@ -104,8 +104,8 @@ if __name__=="__main__":
     # Load Model
     
     pilotModel = PilotNet(dataset.image_shape, dataset.num_labels).to(device)
-    if os.path.isfile( model_save_dir + '/pilot_net_model_{}.ckpt'.format(random_seed)):
-        pilotModel.load_state_dict(torch.load(model_save_dir + '/pilot_net_model_{}.ckpt'.format(random_seed),map_location=device))
+    if os.path.isfile( model_save_dir + '/pilot_net_model_{}.pth'.format(random_seed)):
+        pilotModel.load_state_dict(torch.load(model_save_dir + '/pilot_net_model_{}.pth'.format(random_seed),map_location=device))
         best_model = deepcopy(pilotModel)
         last_epoch = json.load(open(model_save_dir+'/args.json',))['last_epoch']+1
     else:
@@ -118,7 +118,7 @@ if __name__=="__main__":
     # Train the model
     total_step = len(train_loader)
     global_iter = 0
-    global_val_mse = 2
+    global_val_mse = 20
 
 
     print("*********** Training Started ************")
@@ -146,7 +146,7 @@ if __name__=="__main__":
             optimizer.step()
 
             if global_iter % save_iter == 0:
-                torch.save(pilotModel.state_dict(), model_save_dir + '/pilot_net_model_{}.ckpt'.format(random_seed))
+                torch.save(pilotModel.state_dict(), model_save_dir + '/pilot_net_model_last_{}.pth'.format(random_seed))
             global_iter += 1
 
             if print_terminal and (i + 1) % 10 == 0:

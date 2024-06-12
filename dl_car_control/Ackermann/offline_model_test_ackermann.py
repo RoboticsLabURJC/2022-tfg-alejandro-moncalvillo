@@ -13,6 +13,17 @@ from utils.pilotnet import PilotNet
 from datetime import datetime
 
 
+
+def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
+
+    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+    filledLength = int(length * iteration // total)
+    bar = fill * filledLength + '-' * (length - filledLength)
+    print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
+    # Print New Line on Complete
+    if iteration == total: 
+        print()
+
 def parse_args():
     parser = argparse.ArgumentParser()
 
@@ -57,6 +68,10 @@ def main():
         transforms.ToTensor()
     ]) 
 
+    num_lines = 0
+    with open(path + "/" + args.test_dir + "/data.csv", "rb") as f:
+        num_lines = sum(1 for _ in f)
+
     data_file = open(path + "/" + args.test_dir + "/data.csv", "r")
     reader_csv = csv.reader(data_file) 
 
@@ -64,7 +79,11 @@ def main():
     total_time = 0
     min = 20000
     max = -1
-    total_mult = 0
+
+    printProgressBar(0, num_lines, prefix = 'Progress:', suffix = 'Complete', length = 50)
+
+    total_loss_v = 0
+    total_loss_w = 0
     for line in reader_csv:
         
         if first_line:
@@ -107,12 +126,18 @@ def main():
 
         
             net_w_array.append((output[0].detach().numpy()[1]))
+            total_loss_v = total_loss_v + abs(float(line[1])-output[0].detach().numpy()[0]) 
+            total_loss_w = total_loss_w + abs(float(line[2])-output[0].detach().numpy()[1]) 
         else:
             
             net_v_array.append(output.data.cpu().numpy()[0][0])
 
         
             net_w_array.append(output.data.cpu().numpy()[0][1])
+
+            total_loss_v = total_loss_v + abs(float(line[1])-output.data.cpu().numpy()[0][0]) 
+            total_loss_w = total_loss_w +  abs(float(line[2])-output.data.cpu().numpy()[0][1])
+
 
 
 
@@ -128,18 +153,21 @@ def main():
             min = ms
         if ms > max:
             max = ms
-        #if not float(line[2]) == 0:
-            #total_mult = total_mult + (output[0].detach().numpy()[1]/float(line[2]))
+      
         count = count + 1
+        printProgressBar(count, num_lines, prefix = 'Progress:', suffix = 'Complete', length = 50)
+
         
 
     
     data_file.close()
 
     print("Tiempo medio:"+str(total_time/count))
+    print("Error medio v:"+str(total_loss_v/count))
+    print("Error medio w:"+str(total_loss_w/count))
     print("Tiempo min:"+str(min))
     print("Tiempo max:"+str(max))
-    #print("Mult_w: "+ str(total_mult/count))
+
 
     
     plt.subplot(1, 2, 1)

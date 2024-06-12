@@ -26,21 +26,21 @@ def parse_args():
 
 args = parse_args()
 
-def user_main():
+image_shape = (66, 200, 3)
+num_labels = 2
+input_size =[66, 200]
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("cpu")
+pilotModel = PilotNet(image_shape, num_labels).to(device)
+pilotModel.load_state_dict(torch.load(args.net_name,map_location=device))
+pilotModel.eval()
 
+def user_main():
     image= HAL.getImage()
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     # height, width
     height = image.shape[0]
-    width = image.shape[1]
-    device = torch.device("cpu")
-    image_shape = (66, 200, 3)
-    num_labels = 2
-    input_size =[66, 200]
 
-    pilotModel = PilotNet(image_shape, num_labels).to(device)
-    pilotModel.load_state_dict(torch.load(args.net_name,map_location=device))
-    pilotModel.eval()
     preprocess = transforms.Compose([
         transforms.ToTensor()
     ]) 
@@ -60,10 +60,8 @@ def user_main():
         # Inference (min 20hz max 200hz)
         ort_inputs = {ort_session.get_inputs()[0].name: input_tensor}
         output = ort_session.run(None, ort_inputs)[0][0]
-        #print(output)
+        print(output)
         """
-
-
 
         input_tensor = preprocess(resized_image).to(device)
         input_batch = input_tensor.unsqueeze(0)
@@ -71,12 +69,9 @@ def user_main():
         v = output[0].detach().numpy()[0]
         w = output[0].detach().numpy()[1]
 
-        
+
         HAL.setV(v)
         HAL.setW(w)
-
-
-
 
 def main():
 

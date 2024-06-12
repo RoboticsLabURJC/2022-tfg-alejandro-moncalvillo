@@ -11,7 +11,7 @@
 
     <include>
       <uri>model://f1_renault_camera</uri>
-      <pose>-220.9 112.13 0.01 0 0 -2.125</pose>
+      <pose>-372.48 189.37 0.0269 0 0 -2.115</pose>
     </include>
     <gui fullscreen=0>
       <camera name="user_camera">

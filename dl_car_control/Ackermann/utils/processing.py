@@ -56,16 +56,22 @@ def parse_csv(data, array):
 
     return array
 
-def preprocess_data(array, imgs, data_type):
+def preprocess_data(array, imgs, flip, data_type):
+    
+    new_array = array
+    new_array_imgs = imgs
+
     # Data augmentation
-    # Take the image and just flip it and negate the measurement
-    flip_imgs = []
-    array_flip = []
-    for i in tqdm(range(len(imgs))):
-        flip_imgs.append(cv2.flip(imgs[i], 1))
-        array_flip.append((array[i][0], -array[i][1]))
-    new_array = array + array_flip
-    new_array_imgs = imgs + flip_imgs
+    
+    if flip:
+        # Take the image and just flip it and negate the measurement
+        flip_imgs = []
+        array_flip = []
+        for i in tqdm(range(len(imgs))):
+            flip_imgs.append(cv2.flip(imgs[i], 1))
+            array_flip.append((array[i][0], -array[i][1]))
+        new_array += array_flip
+        new_array_imgs += flip_imgs
 
     if data_type == 'extreme':
         extreme_case_1_img = []
