@@ -7,6 +7,7 @@ import cv2
 import utils.hal as HAL
 import csv
 import argparse
+import math
 
 class Brain:
 
@@ -39,13 +40,13 @@ class Brain:
 
     def normal_case(self, deviation):
         if abs(deviation) < 35:
-            rotation = (0.0035 * deviation + 0.05 * (deviation - self.deviation_left))
+            rotation = round((0.0035 * deviation + 0.05 * (deviation - self.deviation_left)),1)
 
         elif abs(deviation) < 10:
-            rotation = (0.004 * deviation + 0.05 * (deviation - self.deviation_left))
+            rotation = round((0.004 * deviation + 0.05 * (deviation - self.deviation_left)),1)
 
         else:
-            rotation = (0.009 * deviation + 0.05 * (deviation - self.deviation_left))
+            rotation = round((0.009 * deviation + 0.05 * (deviation - self.deviation_left)),1)
             
         speed = 0.53
         return speed, rotation
