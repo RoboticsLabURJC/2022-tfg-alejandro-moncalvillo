@@ -15,3 +15,4 @@ dl_car_control/*/datasets*
 *.ckpt
 *.txt
 *.jpg
+*.zip

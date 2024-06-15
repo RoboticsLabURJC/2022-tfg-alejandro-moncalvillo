@@ -147,17 +147,20 @@ def main():
     print("Tiempo min:"+str(min))
     print("Tiempo max:"+str(max))
 
-
-    
     plt.subplot(1, 2, 1)
     plt.plot(n_array, data_v_array, label = "controller", color='b')
     plt.plot(n_array, net_v_array, label = "net", color='tab:orange')
-    plt.title("Lineal speed") 
+    plt.title("Linear speed comparison") 
+    plt.xlabel('Samples')
+    plt.ylabel('Linear speed output')
+    plt.legend(loc="upper left")
     plt.subplot(1, 2, 2)
     plt.plot(n_array, data_w_array, label = "controller", color='b')
     plt.plot(n_array, net_w_array, label = "net", color='tab:orange')
-    plt.title("Angular speed") 
-
+    plt.title("Angular speed comparison") 
+    plt.xlabel('Samples')
+    plt.ylabel('Angular speed output')
+    plt.legend(loc="upper left")
     plt.show()
     
     print("FIN")

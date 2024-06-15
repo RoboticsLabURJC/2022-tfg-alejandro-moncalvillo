@@ -15,7 +15,7 @@ def main():
     path = os.getcwd()
 
 
-    data_file = open(path + "/last_train_data.csv", "r")
+    data_file = open(path + "/last_train_data_deepracer.csv", "r")
     reader_csv = csv.reader(data_file) 
 
     first_line = True
@@ -41,7 +41,10 @@ def main():
     data_file.close()
 
     plt.plot(n_array, loss_array, label = "Loss value", color='b')
-
+    plt.title("Loss evolution") 
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss value')
+    plt.legend(loc="upper left")
 
     plt.show()
 

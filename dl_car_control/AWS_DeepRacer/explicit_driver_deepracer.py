@@ -23,12 +23,12 @@ class Brain:
             # then create it. 
             if not os.path.exists(self.path): 
                 os.mkdir(self.path)
-            if not os.path.exists(self.path + "/" + self.circuit +"_teleop_"+ str(len(os.listdir(self.path)))):
+            if not os.path.exists(self.path + "/" + self.circuit +"_deepracer_"+ str(len(os.listdir(self.path)))):
                 number = len(os.listdir(self.path))
-                os.mkdir(self.path + "/" + self.circuit + "_teleop_" + str(number))
-                self.path = self.path + "/" + self.circuit + "_teleop_" + str(number)
+                os.mkdir(self.path + "/" + self.circuit + "_deepracer_" + str(number))
+                self.path = self.path + "/" + self.circuit + "_deepracer_" + str(number)
             else:
-                self.path = self.path + "/" + self.circuit + "_teleop_" + str(len(os.listdir(self.path)))
+                self.path = self.path + "/" + self.circuit + "_deepracer_" + str(len(os.listdir(self.path)))
 
             self.writer_output = csv.writer(open(self.path + "/data.csv", "w"))
             self.writer_output.writerow(['image_name','v','w'])

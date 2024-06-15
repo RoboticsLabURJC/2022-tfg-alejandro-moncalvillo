@@ -21,13 +21,13 @@ class Brain:
 
         self.path = os.getcwd() + "/datasets"
         self.case_str = 'none'
-        if not os.path.exists(self.path + "/" + self.circuit +"_holonomic_track"): 
+        if not os.path.exists(self.path + "/" + self.circuit +"_holonomic_lane"): 
             # if the circuit directory is not present  
             # then create it. 
-            os.makedirs(self.path + "/" + self.circuit +"_holonomic_track") 
+            os.makedirs(self.path + "/" + self.circuit +"_holonomic_lane") 
 
         if mode == "save":
-            self.writer_output = csv.writer(open(self.path + "/" + self.circuit +"_holonomic_track"+ "/data.csv", "w"))
+            self.writer_output = csv.writer(open(self.path + "/" + self.circuit +"_holonomic_lane"+ "/data.csv", "w"))
             self.writer_output.writerow(["image_name", "v","w"])
         else:
             self.writer_output = None
@@ -108,7 +108,7 @@ class Brain:
             
             if self.mode == "save":
                 self.iteration += 1
-                cv2.imwrite(self.path + "/" + self.circuit + "_holonomic_track" + "/" + str(self.iteration) + ".png", image)
+                cv2.imwrite(self.path + "/" + self.circuit + "_holonomic_lane" + "/" + str(self.iteration) + ".png", image)
                 
             # show image in gui -> frame_0
 

@@ -29,7 +29,7 @@ def parse_args():
     parser.add_argument("--base_dir", type=str, default='exp_random', help="Directory to save everything")
     parser.add_argument("--comment", type=str, default='Random Experiment', help="Comment to know the experiment")
     parser.add_argument("--data_augs", action='append', type=str, default=None, help="Data Augmentations")
-    parser.add_argument("--mirrored_imgs", action='append', type=bool, default=False, help="Add mirrored images to the train data")
+    parser.add_argument("--mirrored_imgs", type=bool, default=False, help="Add mirrored images to the train data")
     parser.add_argument("--num_epochs", type=int, default=100, help="Number of Epochs")
     parser.add_argument("--lr", type=float, default=1e-3, help="Learning rate for Policy Net")
     parser.add_argument("--test_split", type=float, default=0.2, help="Train test Split")
