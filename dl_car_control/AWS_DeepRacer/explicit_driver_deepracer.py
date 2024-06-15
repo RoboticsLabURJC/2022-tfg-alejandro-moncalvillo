@@ -37,7 +37,7 @@ class Brain:
 
 
 
-    def straight_case(self, deviation):
+    def normal_case(self, deviation):
         if abs(deviation) < 35:
             rotation = (0.0035 * deviation + 0.05 * (deviation - self.deviation_left))
 
@@ -50,24 +50,6 @@ class Brain:
         speed = 0.53
         return speed, rotation
 
-    def curve_case(self, deviation):
-        if abs(deviation) < 50:
-            rotation = (0.001 * deviation + 0.0005 * (deviation - self.deviation_left))
-
-        elif abs(deviation) < 80:
-            rotation = (0.0011 * deviation + 0.0005 * (deviation - self.deviation_left))
- 
-        elif abs(deviation) < 130:
-            rotation = (0.0012 * deviation + 0.0005 * (deviation - self.deviation_left))
-  
-        elif abs(deviation) < 190:
-            rotation = (0.0012 * deviation + 0.0006 * (deviation - self.deviation_left))
-            
-        else:
-            rotation = (0.0013 * deviation + 0.0006 * (deviation - self.deviation_left))
-   
-        speed = 0.53
-        return speed, rotation
 
     def execute(self):
         
@@ -115,13 +97,9 @@ class Brain:
                 cv2.putText(filtered_img, "centroid", (cX - 25, cY - 25),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
                 deviation = (filtered_img.shape[1]/2)-cX + 160
 
-                if abs(deviation) < 30:
-                    speed, rotation = self.straight_case(deviation)
-                    print("Recta")
-                else:
-                    speed, rotation = self.curve_case(deviation)
-                    print("Curva")
-                #print(deviation)
+
+                speed, rotation = self.normal_case(deviation)
+    
                 self.deviation_left = deviation
             else:
             
