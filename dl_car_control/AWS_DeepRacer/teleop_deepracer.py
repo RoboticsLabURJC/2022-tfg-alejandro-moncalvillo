@@ -14,8 +14,6 @@ import csv
 import argparse
 import threading
 
-#forward_key_pressed, backward_key_pressed, left_key_pressed, right_key_pressed = False
-
 settings = termios.tcgetattr(sys.stdin)
 
 Finish_program = False
@@ -43,32 +41,27 @@ class GetKeyTrhead(threading.Thread):
             key = self.getKey()
             
             if key == "w":
-                if linear_speed < 18:
-                    linear_speed = THROTLE_VAL
-                    if angular_speed > 0:
-                        angular_speed = 1.0
-                    else:
-                        angular_speed = -1.0
+        
+                linear_speed = THROTLE_VAL
+                if angular_speed > 0:
+                    angular_speed = 1.0
+                else:
+                    angular_speed = -1.0
             if key == "s":
-                if linear_speed > -2 :
-                    linear_speed = -0.4
-                    if angular_speed > 0:
-                        angular_speed = 1.0
-                    else:
-                        angular_speed = -1.0
+                linear_speed = -0.4
+                if angular_speed > 0:
+                    angular_speed = 1.0
+                else:
+                    angular_speed = -1.0
             if key == "a":
                 if angular_speed < 0:
                     angular_speed = 0.1
-                elif angular_speed > 0 and angular_speed < 1:
-                    angular_speed = angular_speed + 0.1
-                elif angular_speed == 0:
+                elif angular_speed >= 0 and angular_speed < 1:
                     angular_speed = angular_speed + 0.1
             elif key == "d":
                 if angular_speed > 0:
                     angular_speed = - 0.1
-                elif angular_speed < 0 and angular_speed > -1:
-                    angular_speed = angular_speed - 0.1
-                elif angular_speed == 0:
+                elif angular_speed <= 0 and angular_speed > -1:
                     angular_speed = angular_speed - 0.1
             elif key == "q":
                 termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)

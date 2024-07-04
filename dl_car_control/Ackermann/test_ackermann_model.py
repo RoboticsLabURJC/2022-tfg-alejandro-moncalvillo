@@ -3,8 +3,6 @@ import os
 import numpy as np
 import cv2
 import argparse
-import onnx
-import onnxruntime as ort
 import time
 import utils.hal as HAL
 import matplotlib.pyplot as plt
@@ -12,8 +10,6 @@ import torch
 from torchvision import transforms
 from utils.pilotnet import PilotNet
 
-
-#ort_session = ort.InferenceSession("mynet_holo.onnx",providers=['CPUExecutionProvider'])
 
 def parse_args():
     parser = argparse.ArgumentParser()
